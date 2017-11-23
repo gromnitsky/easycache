@@ -8,8 +8,8 @@ let render = function(css_query, cp) {
 	    + '<td colspan="3"><hr></td>'
 	    + tail
 	return head + `
-<td style="width: 35%" class="cp__item__input"><input type="search" spellcheck='false' required value="${item.name}">
-<td style="width: 50%" class="cp__item__input"><input type="search" spellcheck='false' required value="${item.tmpl}">
+<td style="width: 35%" class="cp__item__input"><input type="search" spellcheck='false' required value="${item.name}" placeholder="A uniq name">
+<td style="width: 50%" class="cp__item__input"><input type="search" spellcheck='false' required value="${item.tmpl}" placeholder="http://example.com/%s">
 <td><input type="checkbox" ${item.new_tab ? "checked" : ""}></td>` + tail
     }
     document.querySelector(css_query).innerHTML = cp.get().map(row).join("\n")
@@ -59,6 +59,7 @@ let main = function() {
     }
 
     document.querySelector('#cp__reset').onclick = () => {
+	if (!window.confirm("Are you sure?")) return
 	cp.reset()
 	rerender()
     }
