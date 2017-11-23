@@ -1,0 +1,48 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EasyCache Options</title>
+<style type="text/css">
+  body {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  input[type="search"] { width: 100%; }
+  td { text-align: center; }
+  td.cp__item__input { padding: 0 4px; }
+  hr {
+    border: none;
+    height: 1px;
+    background-color: lightgray;
+  }
+  form > hr { margin-top: 2em; }
+</style>
+
+<p>
+  DnD to rearrange the items.
+</p>
+
+<form>
+  <button>Add provider</button>
+  <button>Add menu separator</button>
+
+  <table>
+    <thead>
+      <tr>
+	<th></th>
+	<th>Name</th>
+	<th>URI Template</th>
+	<th>Open in a new tab?</th>
+      </tr>
+    </thead>
+    <tbody id="cp__list">
+      <!-- render -->
+    </tbody>
+  </table>
+
+  <hr>
+  <input type="submit" value="Save">
+  <button>Reset</button>
+</form>
+
+<script src="options.js"></script>
