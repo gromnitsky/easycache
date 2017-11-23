@@ -15,5 +15,30 @@
     "homepage": "https://github.com/gromnitsky/easycache#readme",
     "dependencies": {
 	"table-dragger": "~1.0.2"
+    },
+    "eslintConfig": {
+	"parserOptions": {
+	    "ecmaVersion": 6,
+            "sourceType": "module",
+	    "ecmaFeatures": {
+		"impliedStrict": true
+            }
+	},
+	"env": {
+	    "es6": true,
+	    "browser": true
+	},
+	"extends": ["eslint:recommended"],
+	"rules": {
+	    "no-console": [ "off" ],
+	    "no-mixed-spaces-and-tabs": [ "off" ],
+	    "no-unused-vars": [ "warn", { "argsIgnorePattern": "^_" } ],
+
+	    "eqeqeq": [ "error" ],
+	    "block-scoped-var": [ "warn" ],
+	    "default-case": [ "error" ],
+	    "dot-notation": [ "error" ],
+	    "no-throw-literal": [ "error" ]
+	}
     }
 }
