@@ -20,7 +20,7 @@ class CacheProviders {
 
     url(name, url = 'https://www.yahoo.com/') {
 	let p = this.get()[this.findIndex(name)]
-	return p.tmpl ? p.tmpl.replace(/%s/, encodeURIComponent(url)) : p.cb(name)
+	return p.tmpl ? p.tmpl.replace(/%s/, url) : p.cb(name)
     }
 
     is_sep(idx) { return this.get()[idx].separator }
@@ -47,7 +47,7 @@ CacheProviders.def = [
     { separator: 1 },
     {
 	name: "Wayback Machine",
-	tmpl: 'https://wayback.archive.org/web/*/%s',
+	tmpl: 'https://web.archive.org/web/*/%s',
 	new_tab: 1
     },
     {
@@ -56,4 +56,31 @@ CacheProviders.def = [
     }
 ]
 
-module.exports = CacheProviders
+exports.CacheProviders = CacheProviders
+
+exports.menu = function(cp) {
+    console.info('create menu')
+    chrome.contextMenus.create({
+	"id": "root",
+	"title": "EasyCache",
+	"contexts": ["link"]
+    })
+
+    let menu_child = function(idx, opts) {
+	chrome.contextMenus.create(Object.assign({
+	    parentId: "root",
+	    contexts: ["link"],
+	    id: String(idx)
+	}, opts))
+    }
+    cp.get().forEach( (val, idx) => {
+	if (val.separator) {
+	    menu_child(idx, {type: "separator" })
+	} else {
+	    menu_child(idx, {
+		title: val.name,
+		id: String(idx)
+	    })
+	}
+    })
+}

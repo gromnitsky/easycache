@@ -3,5 +3,13 @@
     "name": "easycache",
     "description": "Chrome extension for various web caches/archivers",
     "version": "0.0.1",
-    "options_page": "options.html"
+    "options_page": "options.html",
+    "permissions": [
+	"contextMenus",
+	"tabs"
+    ],
+    "background": {
+	"persistent": false,
+	"scripts": ["event_page.mjs"]
+    }
 }

@@ -1,6 +1,6 @@
 'use strict';
 
-let CacheProviders = require('./cacheproviders.mjs')
+let cache_providers = require('./cacheproviders.mjs')
 
 let render = function(css_query, cp) {
     let row = function(item, idx) {
@@ -19,7 +19,7 @@ let render = function(css_query, cp) {
 
 /* global tableDragger */
 let main = function() {
-    let cp = new CacheProviders()
+    let cp = new cache_providers.CacheProviders()
     let dragger
     let rerender = () => {
 	if (dragger) dragger.destroy()
@@ -86,10 +86,16 @@ let main = function() {
 	rerender()
     }
 
+    /* globals chrome */
     document.querySelector('form').onsubmit = evt => {
 	evt.preventDefault()
 	let data = save()
 	window.localStorage.setItem('cache_providers', JSON.stringify(data))
+
+	// update the menu
+	chrome.contextMenus.removeAll( () => {
+	    cache_providers.menu(cp)
+	})
     }
 }
 
