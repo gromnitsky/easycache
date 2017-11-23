@@ -1,4 +1,6 @@
-export default class CacheProviders {
+'use strict';
+
+class CacheProviders {
     get() {
 	if (this._list) return this._list
 	let saved = window.localStorage.getItem('cache_providers')
@@ -53,3 +55,5 @@ CacheProviders.def = [
 	tmpl: 'https://archive.today/?run=1&url=%s'
     }
 ]
+
+module.exports = CacheProviders

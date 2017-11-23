@@ -1,24 +1,19 @@
 {
-    "name": "easycache",
-    "version": "0.0.1",
-    "description": "Chrome extension for various web caches/archivers",
     "private": "true",
+    "name": "see-manifest.json",
+    "version": "0.0.1-see-manifest.json",
     "repository": {
 	"type": "git",
 	"url": "git+https://github.com/gromnitsky/easycache.git"
     },
     "author": "Alexander Gromnitsky",
     "license": "MIT",
-    "bugs": {
-	"url": "https://github.com/gromnitsky/easycache/issues"
-    },
-    "homepage": "https://github.com/gromnitsky/easycache#readme",
     "dependencies": {
 	"table-dragger": "~1.0.2"
     },
     "eslintConfig": {
 	"parserOptions": {
-	    "ecmaVersion": 6,
+	    "ecmaVersion": 7,
             "sourceType": "module",
 	    "ecmaFeatures": {
 		"impliedStrict": true
@@ -26,7 +21,8 @@
 	},
 	"env": {
 	    "es6": true,
-	    "browser": true
+	    "browser": true,
+	    "commonjs": true
 	},
 	"extends": ["eslint:recommended"],
 	"rules": {

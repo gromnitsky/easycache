@@ -1,4 +1,6 @@
-import CacheProviders from './cacheproviders.mjs'
+'use strict';
+
+let CacheProviders = require('./cacheproviders.mjs')
 
 let render = function(css_query, cp) {
     let row = function(item, idx) {
