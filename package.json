@@ -1,0 +1,19 @@
+{
+    "name": "easycache",
+    "version": "0.0.1",
+    "description": "Chrome extension for various web caches/archivers",
+    "private": "true",
+    "repository": {
+	"type": "git",
+	"url": "git+https://github.com/gromnitsky/easycache.git"
+    },
+    "author": "Alexander Gromnitsky",
+    "license": "MIT",
+    "bugs": {
+	"url": "https://github.com/gromnitsky/easycache/issues"
+    },
+    "homepage": "https://github.com/gromnitsky/easycache#readme",
+    "dependencies": {
+	"table-dragger": "~1.0.2"
+    }
+}

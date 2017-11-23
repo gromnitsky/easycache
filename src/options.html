@@ -10,12 +10,20 @@
   input[type="search"] { width: 100%; }
   td { text-align: center; }
   td.cp__item__input { padding: 0 4px; }
+  .cp__item__delete input {
+    border: none;
+    background-color: inherit;
+    cursor: pointer;
+  }
   hr {
     border: none;
     height: 1px;
     background-color: lightgray;
   }
   form > hr { margin-top: 2em; }
+
+  /* table-gragger */
+  .sindu_dragger table { background: inherit !important; }
 </style>
 
 <p>
@@ -23,8 +31,8 @@
 </p>
 
 <form>
-  <button>Add provider</button>
-  <button>Add menu separator</button>
+  <input type="button" id="cp__provider_add" value="Add provider">
+  <input type="button" id="cp__separator_add" value="Add menu separator">
 
   <table>
     <thead>
@@ -32,17 +40,19 @@
 	<th></th>
 	<th>Name</th>
 	<th>URI Template</th>
-	<th>Open in a new tab?</th>
+	<th>Open in a new tab</th>
+	<th></th>
       </tr>
     </thead>
-    <tbody id="cp__list">
+    <tbody>
       <!-- render -->
     </tbody>
   </table>
 
   <hr>
   <input type="submit" value="Save">
-  <button>Reset</button>
+  <input type="button" id="cp__reset" value="Reset"
 </form>
 
+<script src="../node_modules/table-dragger/dist/table-dragger.min.js"></script>
 <script src="options.js"></script>
