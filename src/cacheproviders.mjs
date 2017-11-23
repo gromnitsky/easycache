@@ -1,8 +1,8 @@
 export default class CacheProviders {
-    // TODO: localstorage
     get() {
 	if (this._list) return this._list
-	this._list = Object.assign([], CacheProviders.def)
+	let saved = window.localStorage.getItem('cache_providers')
+	this._list = saved ? JSON.parse(saved) : Object.assign([], CacheProviders.def)
 	return this._list
     }
 
@@ -25,12 +25,12 @@ export default class CacheProviders {
 
     delete(idx) { this.get().splice(idx, 1) }
 
-    reset() { this._list = null }
-
-    swap(a, b) {
-	let t = this.get();
-	[t[a], t[b]] = [t[b], t[a]]
+    reset() {
+	window.localStorage.removeItem('cache_providers')
+	this._list = null
     }
+
+    update(data) { this._list = data }
 }
 
 CacheProviders.def = [
