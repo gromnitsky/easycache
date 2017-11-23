@@ -1,4 +1,6 @@
 out := _build
+ext := $(out)/ext
+cache := $(out)/.cache
 mkdir = @mkdir -p $(dir $@)
 copy = cp $< $@
 
@@ -6,18 +8,18 @@ compile:
 compile.all :=
 
 vendor.src := table-dragger/dist/table-dragger.min.js
-vendor.dest := $(addprefix $(out)/vendor/, $(vendor.src))
+vendor.dest := $(addprefix $(ext)/vendor/, $(vendor.src))
 
-$(out)/vendor/%: node_modules/%
+$(ext)/vendor/%: node_modules/%
 	$(mkdir)
 	$(copy)
 
 compile.all += $(vendor.dest)
 
 assets.src := $(wildcard $(addprefix src/, *.html icons/* manifest.json))
-assets.dest := $(patsubst src/%, $(out)/%, $(assets.src))
+assets.dest := $(patsubst src/%, $(ext)/%, $(assets.src))
 
-$(assets.dest): $(out)/%: src/%
+$(assets.dest): $(ext)/%: src/%
 	$(mkdir)
 	$(copy)
 
@@ -27,12 +29,31 @@ compile.all += $(assets.dest)
 
 # FIXME: rm this section after Chrome will allow loading es6 modules
 #        within extensions (the spring of 2018?)
-bundles.src := src/options.mjs src/event_page.mjs
-bundles.dest := $(patsubst src/%.mjs, $(out)/%.mjs, $(bundles.src))
+mjs.dest := $(patsubst src/%.mjs, $(cache)/%.mjs, $(wildcard src/*.mjs))
+bundles.src := $(cache)/options.mjs $(cache)/event_page.mjs
+bundles.dest := $(patsubst $(cache)/%.mjs, $(ext)/%.mjs, $(bundles.src))
 
-$(out)/%.mjs: src/%.mjs
+-include $(bundles.src:.mjs=.d)
+
+$(mjs.dest): $(cache)/%.mjs: src/%.mjs
+	$(mkdir)
+	$(copy)
+
+compile.all += $(mjs.dest)
+
+# browserify 14.4.0
+define make-depend
+@echo Generating $(basename $<).d
+@printf '%s: ' $@ > $(basename $<).d
+@browserify --no-bundle-external --list $< \
+        | sed s,$(CURDIR)/,, | sed s,$<,, | tr '\n' ' ' \
+        >> $(basename $<).d
+endef
+
+$(ext)/%.mjs: $(cache)/%.mjs
 	$(mdir)
 	browserify $< -o $@
+	$(make-depend)
 
 compile.all += $(bundles.dest)
 
