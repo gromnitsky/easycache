@@ -25,7 +25,7 @@ let main = function() {
 
 	document.querySelectorAll('.cp__item__delete input').forEach(el => {
 	    el.onclick = () => {
-		if (cp.size() === 1) { // chk for separators
+		if (!cp.is_sep(el.dataset.idx) && cp.almost_empty()) {
 		    alert("meh")
 		    return
 		}

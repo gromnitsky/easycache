@@ -6,7 +6,9 @@ export default class CacheProviders {
 	return this._list
     }
 
-    size() { return this.get().length }
+    almost_empty() {
+	return this.get().filter(val => val.name).length === 1
+    }
 
     add(obj) { return this.get().push(obj) }
 
@@ -18,6 +20,8 @@ export default class CacheProviders {
 	let p = this.get()[this.findIndex(name)]
 	return p.tmpl ? p.tmpl.replace(/%s/, encodeURIComponent(url)) : p.cb(name)
     }
+
+    is_sep(idx) { return this.get()[idx].separator }
 
     delete(idx) { this.get().splice(idx, 1) }
 
