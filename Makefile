@@ -9,9 +9,13 @@ compile.all :=
 
 
 
-node_modules: package.json
+include $(out)/.node_modules.mk
+
+$(out)/.node_modules.mk: package.json
+	$(mkdir)
 	npm i
 	@touch $@
+	@echo Restarting Make
 
 vendor.src := table-dragger/dist/table-dragger.min.js
 vendor.dest := $(addprefix $(ext)/vendor/, $(vendor.src))
@@ -21,7 +25,7 @@ $(ext)/vendor/%: node_modules/%
 	$(copy)
 
 compile.all += $(vendor.dest)
-$(vendor.dest): node_modules
+$(vendor.dest): $(out)/.node_modules.mk
 
 assets.src := $(wildcard $(addprefix src/, *.html *.png manifest.json))
 assets.dest := $(patsubst src/%, $(ext)/%, $(assets.src))
@@ -68,4 +72,22 @@ compile: $(compile.all)
 
 
 
+# crx generation
 pkg.name := $(shell json -e 'this.q = this.name + "-" + this.version' q < src/manifest.json)
+
+crx: $(out)/$(pkg.name).crx
+
+$(out)/$(pkg.name).zip: $(compile.all)
+	$(mkdir)
+	cd $(ext) && zip -qr $(CURDIR)/$@ *
+
+%.crx: %.zip private.pem
+	./zip2crx.sh $< private.pem
+
+private.pem:
+	openssl genrsa 2048 > $@
+
+# sf
+
+upload:
+	scp $(out)/$(pkg.name).crx gromnitsky@web.sourceforge.net:/home/user-web/gromnitsky/htdocs/js/chrome/
