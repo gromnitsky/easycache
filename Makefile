@@ -16,7 +16,7 @@ $(ext)/vendor/%: node_modules/%
 
 compile.all += $(vendor.dest)
 
-assets.src := $(wildcard $(addprefix src/, *.html icons/* manifest.json))
+assets.src := $(wildcard $(addprefix src/, *.html *.png manifest.json))
 assets.dest := $(patsubst src/%, $(ext)/%, $(assets.src))
 
 $(assets.dest): $(ext)/%: src/%
