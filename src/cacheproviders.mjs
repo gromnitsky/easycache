@@ -18,8 +18,9 @@ class CacheProviders {
 	return this.get().findIndex( val => val.name && val.name === name)
     }
 
-    url(name, url = 'https://www.yahoo.com/') {
+    url(name, siteurl = 'https://www.yahoo.com/') {
 	let p = this.get()[this.findIndex(name)]
+	let url = p.encode ? encodeURIComponent(siteurl) : siteurl
 	return p.tmpl ? p.tmpl.replace(/%s/, url) : p.cb(name)
     }
 
@@ -38,26 +39,35 @@ class CacheProviders {
 CacheProviders.def = [
     {
 	name: "Google",
-	tmpl: 'https://webcache.googleusercontent.com/search?q=cache:%s'
+	tmpl: 'https://webcache.googleusercontent.com/search?q=cache:%s',
+	encode: 1
     },
     {
 	name: "Google text only",
-	tmpl: 'https://webcache.googleusercontent.com/search?q=cache:%s&strip=1'
+	tmpl: 'https://webcache.googleusercontent.com/search?q=cache:%s&strip=1',
+	encode: 1
     },
     { separator: 1 },
     {
 	name: "Wayback Machine",
 	tmpl: 'https://web.archive.org/web/*/%s',
-	new_tab: 1
     },
     {
+	name: 'archive.is',
+	tmpl: 'http://archive.is/%s',
+	encode: 1
+    },
+    { separator: 1 },
+    {
 	name: 'archive.is: capture a webpage',
-	tmpl: 'https://archive.today/?run=1&url=%s'
+	tmpl: 'https://archive.today/?run=1&url=%s',
+	encode: 1
     }
 ]
 
 exports.CacheProviders = CacheProviders
 
+/* globals chrome */
 exports.menu = function(cp) {
     console.info('create menu')
     chrome.contextMenus.create({
@@ -75,12 +85,9 @@ exports.menu = function(cp) {
     }
     cp.get().forEach( (val, idx) => {
 	if (val.separator) {
-	    menu_child(idx, {type: "separator" })
+	    menu_child(idx, { type: "separator" })
 	} else {
-	    menu_child(idx, {
-		title: val.name,
-		id: String(idx)
-	    })
+	    menu_child(idx, { title: val.name })
 	}
     })
 }
