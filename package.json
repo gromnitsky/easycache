@@ -1,40 +1,60 @@
 {
     "private": "true",
-    "name": "see-manifest.json",
-    "version": "0.0.1-see-manifest.json",
+    "name": "see-src-manifest.json",
+    "version": "0.0.1-src-see-manifest.json",
     "repository": {
-	"type": "git",
-	"url": "git+https://github.com/gromnitsky/easycache.git"
+        "type": "git",
+        "url": "git+https://github.com/gromnitsky/easycache.git"
     },
     "author": "Alexander Gromnitsky",
     "license": "MIT",
     "dependencies": {
-	"table-dragger": "~1.0.2"
+        "table-dragger": "~1.0.2"
     },
     "eslintConfig": {
-	"parserOptions": {
-	    "ecmaVersion": 7,
+        "parserOptions": {
+            "ecmaVersion": 7,
             "sourceType": "module",
-	    "ecmaFeatures": {
-		"impliedStrict": true
+            "ecmaFeatures": {
+                "impliedStrict": true
             }
-	},
-	"env": {
-	    "es6": true,
-	    "browser": true,
-	    "commonjs": true
-	},
-	"extends": ["eslint:recommended"],
-	"rules": {
-	    "no-console": [ "off" ],
-	    "no-mixed-spaces-and-tabs": [ "off" ],
-	    "no-unused-vars": [ "warn", { "argsIgnorePattern": "^_" } ],
-
-	    "eqeqeq": [ "error" ],
-	    "block-scoped-var": [ "warn" ],
-	    "default-case": [ "error" ],
-	    "dot-notation": [ "error" ],
-	    "no-throw-literal": [ "error" ]
-	}
+        },
+        "env": {
+            "es6": true,
+            "browser": true,
+            "commonjs": true
+        },
+        "extends": [
+            "eslint:recommended"
+        ],
+        "rules": {
+            "no-console": [
+                "off"
+            ],
+            "no-mixed-spaces-and-tabs": [
+                "off"
+            ],
+            "no-unused-vars": [
+                "warn",
+                {
+                    "argsIgnorePattern": "^_"
+                }
+            ],
+            "eqeqeq": [
+                "error"
+            ],
+            "block-scoped-var": [
+                "warn"
+            ],
+            "default-case": [
+                "error"
+            ],
+            "dot-notation": [
+                "error"
+            ],
+            "no-throw-literal": [
+                "error"
+            ]
+        }
     }
 }

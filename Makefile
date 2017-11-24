@@ -7,6 +7,12 @@ copy = cp $< $@
 compile:
 compile.all :=
 
+
+
+node_modules: package.json
+	npm i
+	@touch $@
+
 vendor.src := table-dragger/dist/table-dragger.min.js
 vendor.dest := $(addprefix $(ext)/vendor/, $(vendor.src))
 
@@ -15,6 +21,7 @@ $(ext)/vendor/%: node_modules/%
 	$(copy)
 
 compile.all += $(vendor.dest)
+$(vendor.dest): node_modules
 
 assets.src := $(wildcard $(addprefix src/, *.html *.png manifest.json))
 assets.dest := $(patsubst src/%, $(ext)/%, $(assets.src))
