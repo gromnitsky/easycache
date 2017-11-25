@@ -7,9 +7,10 @@ let cp = new cache_providers.CacheProviders()
 
 let click = function(info, _tab) {
     let provider = cp.get()[Number(info.menuItemId)]
-    let url = cp.url(provider.name, info.linkUrl)
-    console.log(url)
-    chrome.tabs.create({url})
+    cp.url(provider.name, info.linkUrl).then( url => {
+	console.log(url)
+	chrome.tabs.create({url})
+    })
 }
 
 chrome.contextMenus.onClicked.addListener(click)

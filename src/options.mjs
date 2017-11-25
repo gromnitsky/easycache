@@ -9,9 +9,13 @@ let render = function(css_query, cp) {
 	if (item.separator) return head
 	    + '<td colspan="3" class="cp__item__separator"><hr></td>'
 	    + tail
+	if (item.cb) return head + `
+<td style="width: 35%" class="cp__item__predefined"><input type="search" value="${item.name}" data-callback="${item.cb}" disabled></td>
+<td></td><td></td>`
+	    + tail
 	return head + `
-<td style="width: 35%" class="cp__item__input"><input type="search" spellcheck='false' required value="${item.name}" placeholder="A uniq name">
-<td style="width: 50%" class="cp__item__input"><input type="search" spellcheck='false' required value="${item.tmpl}" placeholder="http://example.com/%s">
+<td style="width: 35%" class="cp__item__input"><input type="search" spellcheck='false' required value="${item.name}" placeholder="A uniq name"></td>
+<td style="width: 50%" class="cp__item__input"><input type="search" spellcheck='false' required value="${item.tmpl}" placeholder="http://example.com/%s"></td>
 <td><input type="checkbox" ${item.encode ? "checked" : ""}></td>` + tail
     }
     document.querySelector(css_query).innerHTML = cp.get().map(row).join("\n")
@@ -55,6 +59,9 @@ let main = function() {
 		let td = tr.querySelectorAll('td')
 		if (tr.querySelector(".cp__item__separator")) {
 		    r.separator = 1
+		} else if (tr.querySelector(".cp__item__predefined")) {
+		    r.name = td[1].firstChild.value
+		    r.cb = td[1].firstChild.dataset.callback
 		} else {
 		    r.name = td[1].firstChild.value
 		    r.tmpl = td[2].firstChild.value

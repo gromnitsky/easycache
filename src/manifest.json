@@ -6,7 +6,8 @@
     "options_page": "options.html",
     "permissions": [
 	"contextMenus",
-	"activeTab"
+	"activeTab",
+	"https://www.bing.com/*"
     ],
     "background": {
 	"persistent": false,

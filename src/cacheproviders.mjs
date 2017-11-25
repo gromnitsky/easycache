@@ -18,10 +18,12 @@ class CacheProviders {
 	return this.get().findIndex( val => val.name && val.name === name)
     }
 
+    // returns a promise
     url(name, siteurl = 'https://www.yahoo.com/') {
 	let p = this.get()[this.findIndex(name)]
 	let url = p.encode ? encodeURIComponent(siteurl) : siteurl
-	return p.tmpl ? p.tmpl.replace(/%s/, url) : p.cb(name)
+	if (p.tmpl) return Promise.resolve(p.tmpl.replace(/%s/, url))
+	return CacheProviders.callbacks[p.cb](url)
     }
 
     is_sep(idx) { return this.get()[idx].separator }
@@ -36,6 +38,20 @@ class CacheProviders {
     update(data) { this._list = data }
 }
 
+CacheProviders.callbacks = {
+    // retrieve the 1st cached result of the search;
+    // works as of Sat Nov 25 07:00:14 EET 2017
+    bing: async function(query) {
+	query = encodeURIComponent(query)
+	let html = await fetch(`https://www.bing.com/search?q=${query}`).then( r => r.text())
+	let doc = new DOMParser().parseFromString(html, "text/html")
+
+	let div = doc.querySelector('div.b_caption .b_attribution')
+	let p = div.getAttribute('u').split('|')
+	return `http://cc.bingj.com/cache.aspx?q=${query}&d=${p[2]}&w=${p[3]}`
+    }
+}
+
 CacheProviders.def = [
     {
 	name: "Google",
@@ -46,6 +62,10 @@ CacheProviders.def = [
 	name: "Google text only",
 	tmpl: 'https://webcache.googleusercontent.com/search?q=cache:%s&strip=1',
 	encode: 1
+    },
+    {
+	name: "Bing",
+	cb: 'bing'
     },
     { separator: 1 },
     {
