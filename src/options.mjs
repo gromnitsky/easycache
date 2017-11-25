@@ -5,7 +5,7 @@ let cache_providers = require('./cacheproviders.mjs')
 let render = function(css_query, cp) {
     let row = function(item, idx) {
 	let name = cache_providers.escape_input(item.name)
-	let tmpl = cache_providers.escape_input(item.name)
+	let tmpl = cache_providers.escape_input(item.tmpl)
 	let head = `<tr class="cp__item"><td class="cp__item__move">↑↓</td>`
 	let tail = `<td class="cp__item__delete"><input type="button" data-idx="${idx}" value="∅"></td></tr>`
 	if (item.separator) return head
