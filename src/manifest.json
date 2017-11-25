@@ -1,9 +1,11 @@
 {
     "manifest_version": 2,
     "name": "easycache",
-    "description": "An interface to various web caches/archivers",
-    "version": "0.0.1",
-    "options_page": "options.html",
+    "description": "An interface to various web caches/archivers (Google, Bing, Wayback Machine, archive.is). You can add own providers.",
+    "version": "0.0.2",
+    "options_ui": {
+	"page": "options.html"
+    },
     "permissions": [
 	"contextMenus",
 	"activeTab",
