@@ -111,3 +111,15 @@ exports.menu = function(cp) {
 	}
     })
 }
+
+exports.escape_input = function(str) {
+    if (!str) return str
+    return str.replace(/[&<>"'`]/g, char => ({
+	'&': '&amp;',
+	'<': '&lt;',
+	'>': '&gt;',
+	'"': '&quot;',
+	"'": '&#39;',
+	'`': '&#x60;',
+    }[char]))
+}

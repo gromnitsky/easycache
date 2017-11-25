@@ -12,7 +12,7 @@ let spinner = function() {
 let render = function(css_query, cp, siteurl) {
     let li = function(item) {
 	if (item.separator) return '<li><hr></li>'
-	return `<li><a target='_blank' href="#">${item.name}</a></li>`
+	return `<li><a target='_blank' href="#">${cache_providers.escape_input(item.name)}</a></li>`
     }
     let doc = document.querySelector(css_query)
     doc.innerHTML = cp.get().map(li).join("\n")

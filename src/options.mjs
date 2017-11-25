@@ -4,18 +4,20 @@ let cache_providers = require('./cacheproviders.mjs')
 
 let render = function(css_query, cp) {
     let row = function(item, idx) {
+	let name = cache_providers.escape_input(item.name)
+	let tmpl = cache_providers.escape_input(item.name)
 	let head = `<tr class="cp__item"><td class="cp__item__move">↑↓</td>`
 	let tail = `<td class="cp__item__delete"><input type="button" data-idx="${idx}" value="∅"></td></tr>`
 	if (item.separator) return head
 	    + '<td colspan="3" class="cp__item__separator"><hr></td>'
 	    + tail
 	if (item.cb) return head + `
-<td style="width: 35%" class="cp__item__predefined"><input type="search" value="${item.name}" data-callback="${item.cb}" disabled></td>
+<td style="width: 35%" class="cp__item__predefined"><input type="search" value="${name}" data-callback="${item.cb}" disabled></td>
 <td></td><td></td>`
 	    + tail
 	return head + `
-<td style="width: 35%" class="cp__item__input"><input type="search" spellcheck='false' required value="${item.name}" placeholder="A uniq name"></td>
-<td style="width: 50%" class="cp__item__input"><input type="search" spellcheck='false' required value="${item.tmpl}" placeholder="http://example.com/%s"></td>
+<td style="width: 35%" class="cp__item__input"><input type="search" spellcheck='false' required value="${name}" placeholder="A uniq name"></td>
+<td style="width: 50%" class="cp__item__input"><input type="search" spellcheck='false' required value="${tmpl}" placeholder="http://example.com/%s"></td>
 <td><input type="checkbox" ${item.encode ? "checked" : ""}></td>` + tail
     }
     document.querySelector(css_query).innerHTML = cp.get().map(row).join("\n")
