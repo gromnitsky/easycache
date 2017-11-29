@@ -12,6 +12,9 @@ let click = function(info, _tab) {
     cp.url(provider.name, info.linkUrl).then( url => {
 	console.log(url)
 	chrome.tabs.create({url})
+    }).catch( e => {
+	alert(`Failed to talk to ${provider.name}`)
+	throw e
     })
 }
 
