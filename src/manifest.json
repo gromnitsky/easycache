@@ -9,6 +9,7 @@
     "permissions": [
 	"contextMenus",
 	"activeTab",
+	"storage",
 	"https://www.bing.com/*"
     ],
     "background": {

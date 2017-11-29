@@ -90,9 +90,9 @@ let main = function() {
 	rerender()
     }
 
-    document.querySelector('#cp__reset').onclick = () => {
+    document.querySelector('#cp__reset').onclick = async () => {
 	if (!window.confirm("Are you sure?")) return
-	cp.reset()
+	await cp.reset()
 	rerender()
     }
 
@@ -100,11 +100,11 @@ let main = function() {
     document.querySelector('form').onsubmit = evt => {
 	evt.preventDefault()
 	let data = save()
-	window.localStorage.setItem('cache_providers', JSON.stringify(data))
-
-	// update the menu
-	chrome.contextMenus.removeAll( () => {
-	    cache_providers.menu(cp)
+	cache_providers.storage.set({cache_providers: data}, () => {
+	    // update the menu
+	    chrome.contextMenus.removeAll( () => {
+		cache_providers.menu(cp)
+	    })
 	})
     }
 }

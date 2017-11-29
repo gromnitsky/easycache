@@ -1,11 +1,16 @@
 'use strict';
 
+exports.storage = chrome.storage.sync
+
 class CacheProviders {
-    async get() {
-	if (this._list) return this._list
-	let saved = await Promise.resolve(window.localStorage.getItem('cache_providers'))
-	this._list = saved ? JSON.parse(saved) : Object.assign([], CacheProviders.def)
-	return this._list
+    get() {
+	if (this._list) return Promise.resolve(this._list)
+	return new Promise( (resolve, reject) => {
+	    exports.storage.get(null, saved => {
+		this._list = saved.cache_providers ? saved.cache_providers : Object.assign([], CacheProviders.def)
+		resolve(this._list)
+	    })
+	})
     }
 
     async almost_empty() {
@@ -30,8 +35,12 @@ class CacheProviders {
     async delete(idx) { (await this.get()).splice(idx, 1) }
 
     reset() {
-	window.localStorage.removeItem('cache_providers')
-	this._list = null
+	return new Promise( (resolve, reject) => {
+	    exports.storage.remove('cache_providers', () => {
+		this._list = null
+		resolve(true)
+	    })
+	})
     }
 
     update(data) { this._list = data }
