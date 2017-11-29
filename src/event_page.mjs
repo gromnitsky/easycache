@@ -6,9 +6,9 @@ let cache_providers = require('./cacheproviders.mjs')
 
 let cp = new cache_providers.CacheProviders()
 
-let click = function(info, _tab) {
+let click = async function(info, _tab) {
     cp.update()
-    let provider = cp.get()[Number(info.menuItemId)]
+    let provider = (await cp.get())[Number(info.menuItemId)]
     cp.url(provider.name, info.linkUrl).then( url => {
 	console.log(url)
 	chrome.tabs.create({url})

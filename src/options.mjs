@@ -2,7 +2,7 @@
 
 let cache_providers = require('./cacheproviders.mjs')
 
-let render = function(css_query, cp) {
+let render = async function(css_query, cp) {
     let row = function(item, idx) {
 	let name = cache_providers.escape_input(item.name)
 	let tmpl = cache_providers.escape_input(item.tmpl)
@@ -20,25 +20,26 @@ let render = function(css_query, cp) {
 <td style="width: 50%" class="cp__item__input"><input type="search" spellcheck='false' required value="${tmpl}" placeholder="http://example.com/%s"></td>
 <td><input type="checkbox" ${item.encode ? "checked" : ""}></td>` + tail
     }
-    document.querySelector(css_query).innerHTML = cp.get().map(row).join("\n")
+    let r = await cp.get()
+    document.querySelector(css_query).innerHTML = r.map(row).join("\n")
 }
 
 /* global tableDragger */
 let main = function() {
     let cp = new cache_providers.CacheProviders()
     let dragger
-    let rerender = () => {
+    let rerender = async () => {
 	if (dragger) dragger.destroy()
-	render('table tbody', cp)
+	await render('table tbody', cp)
 
 	document.querySelectorAll('.cp__item__delete input').forEach(el => {
-	    el.onclick = () => {
-		if (!cp.is_sep(el.dataset.idx) && cp.almost_empty()) {
+	    el.onclick = async () => {
+		if (!(await cp.is_sep(el.dataset.idx)) && (await cp.almost_empty())) {
 		    alert("meh")
 		    return
 		}
 //		if (!window.confirm("Sure?")) return
-		cp.delete(el.dataset.idx)
+		await cp.delete(el.dataset.idx)
 		rerender()
 	    }
 	})
@@ -77,15 +78,15 @@ let main = function() {
 
     rerender()
 
-    document.querySelector('#cp__separator_add').onclick = () => {
+    document.querySelector('#cp__separator_add').onclick = async () => {
 	save()
-	cp.add({ separator: 1 })
+	await cp.add({ separator: 1 })
 	rerender()
     }
 
-    document.querySelector('#cp__provider_add').onclick = () => {
+    document.querySelector('#cp__provider_add').onclick = async () => {
 	save()
-	cp.add({ name: '', tmpl: '' })
+	await cp.add({ name: '', tmpl: '' })
 	rerender()
     }
 

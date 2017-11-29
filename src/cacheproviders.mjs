@@ -1,34 +1,33 @@
 'use strict';
 
 class CacheProviders {
-    get() {
+    async get() {
 	if (this._list) return this._list
-	let saved = window.localStorage.getItem('cache_providers')
+	let saved = await Promise.resolve(window.localStorage.getItem('cache_providers'))
 	this._list = saved ? JSON.parse(saved) : Object.assign([], CacheProviders.def)
 	return this._list
     }
 
-    almost_empty() {
-	return this.get().filter(val => val.name).length === 1
+    async almost_empty() {
+	return (await this.get()).filter(val => val.name).length === 1
     }
 
-    add(obj) { return this.get().push(obj) }
+    async add(obj) { return (await this.get()).push(obj) }
 
-    findIndex(name) {
-	return this.get().findIndex( val => val.name && val.name === name)
+    async findIndex(name) {
+	return (await this.get()).findIndex( val => val.name && val.name === name)
     }
 
-    // returns a promise
-    url(name, siteurl = 'https://www.yahoo.com/') {
-	let p = this.get()[this.findIndex(name)]
+    async url(name, siteurl = 'https://www.yahoo.com/') {
+	let p = (await this.get())[await this.findIndex(name)]
 	let url = p.encode ? encodeURIComponent(siteurl) : siteurl
-	if (p.tmpl) return Promise.resolve(p.tmpl.replace(/%s/, url))
+	if (p.tmpl) return p.tmpl.replace(/%s/, url)
 	return CacheProviders.callbacks[p.cb](url)
     }
 
-    is_sep(idx) { return this.get()[idx].separator }
+    async is_sep(idx) { return (await this.get())[idx].separator }
 
-    delete(idx) { this.get().splice(idx, 1) }
+    async delete(idx) { (await this.get()).splice(idx, 1) }
 
     reset() {
 	window.localStorage.removeItem('cache_providers')
@@ -88,7 +87,7 @@ CacheProviders.def = [
 exports.CacheProviders = CacheProviders
 
 /* globals chrome */
-exports.menu = function(cp) {
+exports.menu = async function(cp) {
     console.info('create menu')
     chrome.contextMenus.create({
 	"id": "root",
@@ -102,8 +101,8 @@ exports.menu = function(cp) {
 	    contexts: ["link"],
 	    id: String(idx)
 	}, opts))
-    }
-    cp.get().forEach( (val, idx) => {
+    };
+    (await cp.get()).forEach( (val, idx) => {
 	if (val.separator) {
 	    menu_child(idx, { type: "separator" })
 	} else {
