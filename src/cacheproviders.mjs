@@ -1,6 +1,6 @@
 'use strict';
 
-exports.storage = chrome.storage.sync
+exports.storage = chrome.storage[/@temporary/.test(chrome.runtime.id) ? 'local' : 'sync']
 
 class CacheProviders {
     get() {
