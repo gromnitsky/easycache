@@ -1,11 +1,17 @@
 'use strict';
 
+/* globals chrome */
+
 exports.storage = chrome.storage[/@temporary/.test(chrome.runtime.id) ? 'local' : 'sync']
 
 class CacheProviders {
     get() {
 	if (this._list) return Promise.resolve(this._list)
 	return new Promise( (resolve, reject) => {
+	    if (chrome.runtime.lastError) {
+		reject(chrome.runtime.lastError)
+		return
+	    }
 	    exports.storage.get(null, saved => {
 		this._list = saved.cache_providers ? saved.cache_providers : Object.assign([], CacheProviders.def)
 		resolve(this._list)
@@ -95,7 +101,6 @@ CacheProviders.def = [
 
 exports.CacheProviders = CacheProviders
 
-/* globals chrome */
 exports.menu = async function(cp) {
     console.info('create menu')
     chrome.contextMenus.create({
