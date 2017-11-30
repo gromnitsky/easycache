@@ -20,8 +20,8 @@ let render = async function(css_query, cp) {
 <td style="width: 50%" class="cp__item__input"><input type="search" spellcheck='false' required value="${tmpl}" placeholder="http://example.com/%s"></td>
 <td><input type="checkbox" ${item.encode ? "checked" : ""}></td>` + tail
     }
-    let r = await cp.get()
-    document.querySelector(css_query).innerHTML = r.map(row).join("\n")
+    document.querySelector(css_query).innerHTML = (await cp.get())
+	.map(row).join("\n")
 }
 
 /* global tableDragger */
@@ -39,8 +39,7 @@ let main = function() {
 		    return
 		}
 //		if (!window.confirm("Sure?")) return
-		await cp.delete(el.dataset.idx)
-		rerender()
+		cp.delete(el.dataset.idx).then(rerender)
 	    }
 	})
 
@@ -78,22 +77,19 @@ let main = function() {
 
     rerender()
 
-    document.querySelector('#cp__separator_add').onclick = async () => {
+    document.querySelector('#cp__separator_add').onclick = () => {
 	save()
-	await cp.add({ separator: 1 })
-	rerender()
+	cp.add({ separator: 1 }).then(rerender)
     }
 
-    document.querySelector('#cp__provider_add').onclick = async () => {
+    document.querySelector('#cp__provider_add').onclick = () => {
 	save()
-	await cp.add({ name: '', tmpl: '' })
-	rerender()
+	cp.add({ name: '', tmpl: '' }).then(rerender)
     }
 
-    document.querySelector('#cp__reset').onclick = async () => {
+    document.querySelector('#cp__reset').onclick = () => {
 	if (!window.confirm("Are you sure?")) return
-	await cp.reset()
-	rerender()
+	cp.reset().then(rerender)
     }
 
     /* globals chrome */
