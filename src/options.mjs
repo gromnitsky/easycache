@@ -87,9 +87,15 @@ let main = function() {
 	cp.add({ name: '', tmpl: '' }).then(rerender)
     }
 
+    let menu_upd = () => {
+	chrome.contextMenus.removeAll( () => {
+	    cache_providers.menu(cp)
+	})
+    }
+
     document.querySelector('#cp__reset').onclick = () => {
 	if (!window.confirm("Are you sure?")) return
-	cp.reset().then(rerender)
+	cp.reset().then(rerender).then(menu_upd)
     }
 
     /* globals chrome */
@@ -97,10 +103,7 @@ let main = function() {
 	evt.preventDefault()
 	let data = save()
 	cache_providers.storage.set({cache_providers: data}, () => {
-	    // update the menu
-	    chrome.contextMenus.removeAll( () => {
-		cache_providers.menu(cp)
-	    })
+	    menu_upd()
 	})
     }
 }
