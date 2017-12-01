@@ -9,6 +9,7 @@
     "author": "Alexander Gromnitsky",
     "license": "MIT",
     "dependencies": {
+        "dialog-polyfill": "~0.4.9",
         "table-dragger": "~1.0.2"
     },
     "eslintConfig": {

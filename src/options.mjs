@@ -35,10 +35,9 @@ let main = function() {
 	document.querySelectorAll('.cp__item__delete input').forEach(el => {
 	    el.onclick = async () => {
 		if (!(await cp.is_sep(el.dataset.idx)) && (await cp.almost_empty())) {
-		    alert("meh")
+		    cache_providers.alert("meh")
 		    return
 		}
-//		if (!window.confirm("Sure?")) return
 		cp.delete(el.dataset.idx).then(rerender)
 	    }
 	})
@@ -94,8 +93,8 @@ let main = function() {
     }
 
     document.querySelector('#cp__reset').onclick = () => {
-	if (!window.confirm("Are you sure?")) return
-	cp.reset().then(rerender).then(menu_upd)
+	cache_providers.confirm("Are you sure?")
+	    .then(cp.reset.bind(cp)).then(rerender).then(menu_upd)
     }
 
     /* globals chrome */

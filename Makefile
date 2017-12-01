@@ -17,7 +17,9 @@ $(out)/.node_modules.mk: package.json
 	@touch $@
 	@echo Restarting Make
 
-vendor.src := table-dragger/dist/table-dragger.min.js
+vendor.src := table-dragger/dist/table-dragger.min.js \
+	dialog-polyfill/dialog-polyfill.css \
+	dialog-polyfill/dialog-polyfill.js
 vendor.dest := $(addprefix $(ext)/vendor/, $(vendor.src))
 
 $(ext)/vendor/%: node_modules/%
