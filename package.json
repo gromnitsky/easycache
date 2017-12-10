@@ -10,6 +10,7 @@
     "license": "MIT",
     "dependencies": {
         "dialog-polyfill": "~0.4.9",
+        "plain-dialogs": "~0.1.0",
         "table-dragger": "~1.0.2"
     },
     "eslintConfig": {

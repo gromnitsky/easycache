@@ -19,7 +19,8 @@ $(out)/.node_modules.mk: package.json
 
 vendor.src := table-dragger/dist/table-dragger.min.js \
 	dialog-polyfill/dialog-polyfill.css \
-	dialog-polyfill/dialog-polyfill.js
+	dialog-polyfill/dialog-polyfill.js \
+	plain-dialogs/dist/plain-dialogs.js
 vendor.dest := $(addprefix $(ext)/vendor/, $(vendor.src))
 
 $(ext)/vendor/%: node_modules/%

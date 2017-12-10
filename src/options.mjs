@@ -1,5 +1,7 @@
 'use strict';
 
+/* global tableDragger, plainDialogs */
+
 let cache_providers = require('./cacheproviders.mjs')
 
 let render = async function(css_query, cp) {
@@ -24,7 +26,6 @@ let render = async function(css_query, cp) {
 	.map(row).join("\n")
 }
 
-/* global tableDragger */
 let main = function() {
     let cp = new cache_providers.CacheProviders()
     let dragger
@@ -35,7 +36,7 @@ let main = function() {
 	document.querySelectorAll('.cp__item__delete input').forEach(el => {
 	    el.onclick = async () => {
 		if (!(await cp.is_sep(el.dataset.idx)) && (await cp.almost_empty())) {
-		    cache_providers.alert("meh")
+		    plainDialogs.alert("meh")
 		    return
 		}
 		cp.delete(el.dataset.idx).then(rerender)
@@ -93,7 +94,7 @@ let main = function() {
     }
 
     document.querySelector('#cp__reset').onclick = () => {
-	cache_providers.confirm("Are you sure?")
+	plainDialogs.confirm("Are you sure?")
 	    .then(cp.reset.bind(cp)).then(rerender).then(menu_upd)
     }
 

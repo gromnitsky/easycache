@@ -136,35 +136,3 @@ exports.escape_input = function(str) {
 	'`': '&#x60;',
     }[char]))
 }
-
-exports.alert = function(text) {
-    let node = document.createElement('dialog')
-    dialogPolyfill.registerDialog(node)
-    node.innerHTML = text
-    document.body.appendChild(node)
-    node.onclick = (evt) => evt.target.close()
-    node.onclose = (evt) => document.body.removeChild(evt.target)
-    node.showModal()
-}
-
-exports.confirm = function(text) {
-    let node = document.createElement('dialog')
-    dialogPolyfill.registerDialog(node)
-    node.innerHTML = `<p>${text}</p>
-<button id="dlg__btn--cancel">Cancel</button>
-<button id="dlg__btn--ok">OK</button>`
-    document.body.appendChild(node)
-    return new Promise( (resolve, reject) => {
-	node.querySelector('#dlg__btn--cancel').onclick = () => {
-	    node.close()
-	}
-	node.querySelector('#dlg__btn--ok').onclick = () => {
-	    node.close('ok')
-	}
-	node.onclose = (evt) => {
-	    document.body.removeChild(evt.target)
-	    evt.target.returnValue === 'ok' ? resolve(true) : reject(false)
-	}
-	node.showModal()
-    })
-}
