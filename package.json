@@ -12,51 +12,5 @@
         "dialog-polyfill": "~0.4.9",
         "plain-dialogs": "~0.1.0",
         "table-dragger": "~1.0.2"
-    },
-    "eslintConfig": {
-        "parserOptions": {
-            "ecmaVersion": 2017,
-            "sourceType": "module",
-            "ecmaFeatures": {
-                "impliedStrict": true
-            }
-        },
-        "env": {
-            "es6": true,
-            "browser": true,
-            "commonjs": true
-        },
-        "extends": [
-            "eslint:recommended"
-        ],
-        "rules": {
-            "no-console": [
-                "off"
-            ],
-            "no-mixed-spaces-and-tabs": [
-                "off"
-            ],
-            "no-unused-vars": [
-                "warn",
-                {
-                    "argsIgnorePattern": "^_"
-                }
-            ],
-            "eqeqeq": [
-                "error"
-            ],
-            "block-scoped-var": [
-                "warn"
-            ],
-            "default-case": [
-                "error"
-            ],
-            "dot-notation": [
-                "error"
-            ],
-            "no-throw-literal": [
-                "error"
-            ]
-        }
     }
 }
