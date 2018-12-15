@@ -1,6 +1,6 @@
 'use strict';
 
-/* globals chrome, dialogPolyfill */
+/* globals chrome */
 
 exports.storage = chrome.storage[/@temporary/.test(chrome.runtime.id) ? 'local' : 'sync']
 
@@ -103,16 +103,17 @@ exports.CacheProviders = CacheProviders
 
 exports.menu = async function(cp) {
     console.info('create menu')
+    let ctx = ["link", "image", "selection"]
     chrome.contextMenus.create({
 	"id": "root",
 	"title": "EasyCache",
-	"contexts": ["link"]
+	"contexts": ctx
     })
 
     let menu_child = function(idx, opts) {
 	chrome.contextMenus.create(Object.assign({
 	    parentId: "root",
-	    contexts: ["link"],
+	    contexts: ctx,
 	    id: String(idx)
 	}, opts))
     };
