@@ -43,17 +43,17 @@ compile.all += $(assets.dest)
 
 # FIXME: rm this section after Chrome will allow loading es6 modules
 #        within extensions (the spring of 2018?)
-mjs.dest := $(patsubst src/%.mjs, $(cache)/%.mjs, $(wildcard src/*.mjs))
-bundles.src := $(addprefix $(cache)/, options.mjs event_page.mjs popup.mjs)
-bundles.dest := $(patsubst $(cache)/%.mjs, $(ext)/%.mjs, $(bundles.src))
+js.dest := $(patsubst src/%.mjs, $(cache)/%.js, $(wildcard src/*.mjs))
+bundles.src := $(addprefix $(cache)/, options.js event_page.js popup.js)
+bundles.dest := $(patsubst $(cache)/%.js, $(ext)/%.js, $(bundles.src))
 
--include $(bundles.src:.mjs=.d)
+-include $(bundles.src:.js=.d)
 
-$(mjs.dest): $(cache)/%.mjs: src/%.mjs
+$(js.dest): $(cache)/%.js: src/%.mjs
 	$(mkdir)
 	$(copy)
 
-compile.all += $(mjs.dest)
+compile.all += $(js.dest)
 
 # browserify 14.4.0
 define make-depend
@@ -64,7 +64,7 @@ define make-depend
         >> $(basename $<).d
 endef
 
-$(ext)/%.mjs: $(cache)/%.mjs
+$(ext)/%.js: $(cache)/%.js
 	$(mdir)
 	browserify $< -o $@
 	$(make-depend)

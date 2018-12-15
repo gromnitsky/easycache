@@ -2,7 +2,7 @@
 
 /* global tableDragger, plainDialogs */
 
-let cache_providers = require('./cacheproviders.mjs')
+let cache_providers = require('./cacheproviders')
 
 let render = async function(css_query, cp) {
     let row = function(item, idx) {

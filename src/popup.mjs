@@ -2,7 +2,7 @@
 
 /* globals chrome */
 
-let cache_providers = require('./cacheproviders.mjs')
+let cache_providers = require('./cacheproviders')
 
 let spinner = function() {
     let node = document.querySelector('#warning')

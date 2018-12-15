@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "easycache",
     "description": "An interface to various web caches/archivers (Google, Bing, Wayback Machine, archive.is). You can add own providers.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "options_ui": {
 	"page": "options.html"
     },
@@ -14,7 +14,7 @@
     ],
     "background": {
 	"persistent": false,
-	"scripts": ["event_page.mjs"]
+	"scripts": ["event_page.js"]
     },
     "browser_action": {
         "default_popup": "popup.html",

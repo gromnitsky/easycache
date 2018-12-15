@@ -2,7 +2,7 @@
 
 /* globals chrome */
 
-let cache_providers = require('./cacheproviders.mjs')
+let cache_providers = require('./cacheproviders')
 
 let cp = new cache_providers.CacheProviders()
 
