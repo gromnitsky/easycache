@@ -44,7 +44,7 @@ compile.all += $(assets.dest)
 # FIXME: rm this section after Chrome will allow loading es6 modules
 #        within extensions (the spring of 2018?)
 js.dest := $(patsubst src/%.mjs, $(cache)/%.js, $(wildcard src/*.mjs))
-bundles.src := $(addprefix $(cache)/, options.js event_page.js popup.js)
+bundles.src := $(addprefix $(cache)/, options.js event_page.js popup.js content_script.js)
 bundles.dest := $(patsubst $(cache)/%.js, $(ext)/%.js, $(bundles.src))
 
 -include $(bundles.src:.js=.d)

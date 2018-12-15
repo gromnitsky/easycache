@@ -18,9 +18,28 @@ let url = function(info) {
     return info.linkUrl || info.srcUrl
 }
 
-let click = async function(info, _tab) {
+let alert = function(tab, msg, retry) {
+    chrome.tabs.sendMessage(tab.id, msg, res => {
+	if (!res && !retry) {	// no script was injected yet
+	    inject_content_script( () => {
+		console.log('content script injected', tab.url)
+		alert(tab, msg, true) // retry only once
+	    })
+	    return
+	}
+	// do nothing: the injected script should display an alert() dialog
+    })
+}
+
+let inject_content_script = function(cb) {
+    chrome.tabs.executeScript({
+	file: 'content_script.js'
+    }, () => cb())
+}
+
+let click = async function(info, tab) {
     let link = url(info); if (!link) {
-	alert("Failed to extract the URL")
+	alert(tab, "Failed to extract the URL")
 	return
     }
 
@@ -30,7 +49,7 @@ let click = async function(info, _tab) {
 	console.log(url)
 	chrome.tabs.create({url})
     }).catch( e => {
-	alert(`Failed to talk to ${provider.name}`)
+	alert(tab, `Failed to talk to ${provider.name}`)
 	throw e
     })
 }
