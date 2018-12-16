@@ -5,10 +5,10 @@
 Open any link or the active tab in services like Google Cache, Bing,
 Wayback Machine or archive.is. Add you own providers.
 
-Tested on:
+Minimum supported versions:
 
-* Chrome 62
-* Firefox 57
+* Chrome 71
+* Firefox 60.4.0
 
 ![popup](https://ultraimg.com/images/2017/11/25/ncZ7.png)
 
@@ -25,10 +25,10 @@ all the info we need for reconstructing a proper url.
 
 ## Compilation
 
-	$ npm i -g browserify json
+	$ npm i -g json
 	$ make crx
 
-The resulting .crx should appear in `_build` dir.
+The resulting .crx should appear in `_out` dir.
 
 ## License
 
