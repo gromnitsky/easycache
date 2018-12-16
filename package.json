@@ -2,14 +2,11 @@
     "private": "true",
     "name": "see-src-manifest.json",
     "version": "0.0.1-src-see-manifest.json",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/gromnitsky/easycache.git"
-    },
+    "repository": "github:gromnitsky/easycache",
     "author": "Alexander Gromnitsky",
     "license": "MIT",
     "dependencies": {
-        "dialog-polyfill": "~0.4.9",
+        "dialog-polyfill": "~0.4.10",
         "plain-dialogs": "~0.1.0",
         "table-dragger": "~1.0.2"
     }
