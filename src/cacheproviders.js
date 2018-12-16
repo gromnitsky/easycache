@@ -1,10 +1,6 @@
-'use strict';
+export let storage = chrome.storage[/@temporary/.test(chrome.runtime.id) ? 'local' : 'sync']
 
-/* globals chrome */
-
-exports.storage = chrome.storage[/@temporary/.test(chrome.runtime.id) ? 'local' : 'sync']
-
-class CacheProviders {
+export class CacheProviders {
     get() {
 	if (this._list) return Promise.resolve(this._list)
 	return new Promise( (resolve, reject) => {
@@ -12,7 +8,7 @@ class CacheProviders {
 		reject(chrome.runtime.lastError)
 		return
 	    }
-	    exports.storage.get(null, saved => {
+	    storage.get(null, saved => {
 		this._list = saved.cache_providers ? saved.cache_providers : Object.assign([], CacheProviders.def)
 		resolve(this._list)
 	    })
@@ -42,7 +38,7 @@ class CacheProviders {
 
     reset() {
 	return new Promise( (resolve, reject) => {
-	    exports.storage.remove('cache_providers', () => {
+	    storage.remove('cache_providers', () => {
 		this._list = null
 		resolve(true)
 	    })
@@ -99,9 +95,7 @@ CacheProviders.def = [
     }
 ]
 
-exports.CacheProviders = CacheProviders
-
-exports.menu = async function(cp) {
+export let menu = async function(cp) {
     console.info('create menu')
     let ctx = ["link", "image", "selection"]
     chrome.contextMenus.create({
@@ -126,7 +120,7 @@ exports.menu = async function(cp) {
     })
 }
 
-exports.escape_input = function(str) {
+export let escape_input = function(str) {
     if (!str) return str
     return str.replace(/[&<>"'`]/g, char => ({
 	'&': '&amp;',

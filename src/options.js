@@ -1,8 +1,5 @@
-'use strict';
-
-/* global tableDragger, plainDialogs */
-
-let cache_providers = require('./cacheproviders')
+/* globals tableDragger, plainDialogs */
+import * as cache_providers from './cacheproviders.js'
 
 let render = async function(css_query, cp) {
     let row = function(item, idx) {

@@ -1,8 +1,4 @@
-'use strict';
-
-/* globals chrome */
-
-let cache_providers = require('./cacheproviders')
+import * as cache_providers from './cacheproviders.js'
 
 let spinner = function() {
     let node = document.querySelector('#warning')

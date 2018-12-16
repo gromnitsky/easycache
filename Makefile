@@ -1,10 +1,13 @@
-out := _build
+out := _out
 ext := $(out)/ext
-cache := $(out)/.cache
+pkg.name := $(shell json -d- -a name version < src/manifest.json)
+crx := $(out)/$(pkg.name).crx
+
 mkdir = @mkdir -p $(dir $@)
 copy = cp $< $@
 
-compile:
+all:
+crx: $(crx)
 compile.all :=
 
 
@@ -30,8 +33,7 @@ $(ext)/vendor/%: node_modules/%
 compile.all += $(vendor.dest)
 $(vendor.dest): $(out)/.node_modules.mk
 
-assets.src := $(wildcard $(addprefix src/, *.html *.png manifest.json))
-assets.dest := $(patsubst src/%, $(ext)/%, $(assets.src))
+assets.dest := $(patsubst src/%, $(ext)/%, $(wildcard src/*))
 
 $(assets.dest): $(ext)/%: src/%
 	$(mkdir)
@@ -39,58 +41,22 @@ $(assets.dest): $(ext)/%: src/%
 
 compile.all += $(assets.dest)
 
-
-
-# FIXME: rm this section after Chrome will allow loading es6 modules
-#        within extensions (the spring of 2018?)
-js.dest := $(patsubst src/%.mjs, $(cache)/%.js, $(wildcard src/*.mjs))
-bundles.src := $(addprefix $(cache)/, options.js event_page.js popup.js content_script.js)
-bundles.dest := $(patsubst $(cache)/%.js, $(ext)/%.js, $(bundles.src))
-
--include $(bundles.src:.js=.d)
-
-$(js.dest): $(cache)/%.js: src/%.mjs
-	$(mkdir)
-	$(copy)
-
-compile.all += $(js.dest)
-
-# browserify 14.4.0
-define make-depend
-@echo Generating $(basename $<).d
-@printf '%s: ' $@ > $(basename $<).d
-@browserify --no-bundle-external --list $< \
-        | sed s,$(CURDIR)/,, | sed s,$<,, | tr '\n' ' ' \
-        >> $(basename $<).d
-endef
-
-$(ext)/%.js: $(cache)/%.js
-	$(mdir)
-	browserify $< -o $@
-	$(make-depend)
-
-compile.all += $(bundles.dest)
-
-compile: $(compile.all)
+all: $(compile.all)
 
 
-
-# crx generation
-pkg.name := $(shell json -e 'this.q = this.name + "-" + this.version' q < src/manifest.json)
-
-crx: $(out)/$(pkg.name).crx
 
 $(out)/$(pkg.name).zip: $(compile.all)
 	$(mkdir)
 	cd $(ext) && zip -qr $(CURDIR)/$@ *
 
-%.crx: %.zip private.pem
-	./zip2crx.sh $< private.pem
+pkg.key := $(out)/private.pem
+%.crx: %.zip $(pkg.key)
+	./zip2crx $^
 
-private.pem:
+$(pkg.key):
 	openssl genrsa 2048 > $@
 
 # sf
 
-upload:
-	scp $(out)/$(pkg.name).crx gromnitsky@web.sourceforge.net:/home/user-web/gromnitsky/htdocs/js/chrome/
+upload: $(crx)
+	scp $< gromnitsky@web.sourceforge.net:/home/user-web/gromnitsky/htdocs/js/chrome/
