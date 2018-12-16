@@ -22,7 +22,7 @@ let render = async function(css_query, cp, siteurl) {
 	    cp.url(name, siteurl).then( url => {
 		spinner()
 		console.log(url)
-		chrome.tabs.create({url})
+		chrome.tabs.create({url}, () => window.close())
 	    }).catch(e => {
 		alert(`Failed to talk to ${name}`)
 		spinner()
