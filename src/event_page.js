@@ -3,15 +3,11 @@ import * as cache_providers from './cacheproviders.js'
 let cp = new cache_providers.CacheProviders()
 
 let url = function(info) {
-    if (info.selectionText) {
-	let r; try {
-	    r = new URL(info.selectionText)
-	} catch (e) {
-	    return null
-	}
-	return r.href
+    try {
+	return new URL(info.selectionText || info.linkUrl || info.srcUrl).href
+    } catch (e) {
+	return null
     }
-    return info.linkUrl || info.srcUrl
 }
 
 let alert = function(tab, msg, retry) {
