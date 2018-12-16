@@ -1,20 +1,22 @@
 <!doctype html>
 <meta charset="utf-8">
 <style type="text/css">
+  :root { --fg: #191919; }
   body {
-   min-width: 20em;
-   font-family: sans-serif;
+    margin: 0;
+    min-width: 20em;
+    font-family: sans-serif;
   }
   ul { padding: 0; }
   ul a {
     text-decoration: none;
-    color: black;
+    color: var(--fg);
     display: block;
     padding: .2em 1em;
   }
   li { list-style-type: none; }
   a:hover {
-    background: black;
+    background: var(--fg);
     color: #e6e6e6;
     cursor: pointer;
   }
