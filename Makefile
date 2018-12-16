@@ -1,14 +1,13 @@
-out := _out
+out := _out/$(shell git rev-parse --abbrev-ref HEAD)
 ext := $(out)/ext
 pkg.name := $(shell json -d- -a name version < src/manifest.json)
-crx := $(out)/$(pkg.name).crx
+pkg.crx := $(out)/$(pkg.name).crx
 
 mkdir = @mkdir -p $(dir $@)
 copy = cp $< $@
 
 all:
-crx: $(crx)
-compile.all :=
+crx: $(pkg.crx)
 
 
 
@@ -17,8 +16,7 @@ include $(out)/.node_modules.mk
 $(out)/.node_modules.mk: package.json
 	$(mkdir)
 	npm i
-	@touch $@
-	@echo Restarting Make
+	@touch $@ && echo Restarting Make
 
 vendor.src := table-dragger/dist/table-dragger.min.js \
 	dialog-polyfill/dialog-polyfill.css \
@@ -30,7 +28,6 @@ $(ext)/vendor/%: node_modules/%
 	$(mkdir)
 	$(copy)
 
-compile.all += $(vendor.dest)
 $(vendor.dest): $(out)/.node_modules.mk
 
 assets.dest := $(patsubst src/%, $(ext)/%, $(wildcard src/*))
@@ -39,8 +36,7 @@ $(assets.dest): $(ext)/%: src/%
 	$(mkdir)
 	$(copy)
 
-compile.all += $(assets.dest)
-
+compile.all := $(vendor.dest) $(assets.dest)
 all: $(compile.all)
 
 
