@@ -1,7 +1,7 @@
 /* globals tableDragger, plainDialogs */
 import * as cache_providers from './cacheproviders.js'
 
-let render = async function(css_query, cp) {
+let render = function(css_query, cp) {
     let row = function(item, idx) {
 	let name = cache_providers.escape_input(item.name)
 	let tmpl = cache_providers.escape_input(item.tmpl)
@@ -19,24 +19,26 @@ let render = async function(css_query, cp) {
 <td style="width: 50%" class="cp__item__input"><input type="search" spellcheck='false' required value="${tmpl}" placeholder="http://example.com/%s"></td>
 <td><input type="checkbox" ${item.encode ? "checked" : ""}></td>` + tail
     }
-    document.querySelector(css_query).innerHTML = (await cp.get())
+    document.querySelector(css_query).innerHTML = cp.get()
 	.map(row).join("\n")
 }
 
-let main = function() {
+let main = async function() {
     let cp = new cache_providers.CacheProviders()
+    await cp.load()
     let dragger
-    let rerender = async () => {
+    let rerender = () => {
 	if (dragger) dragger.destroy()
-	await render('table tbody', cp)
+	render('table tbody', cp)
 
 	document.querySelectorAll('.cp__item__delete input').forEach(el => {
-	    el.onclick = async () => {
-		if (!(await cp.is_sep(el.dataset.idx)) && (await cp.almost_empty())) {
+	    el.onclick = () => {
+		if (!cp.is_sep(el.dataset.idx) && cp.almost_empty()) {
 		    plainDialogs.alert("meh")
 		    return
 		}
-		cp.delete(el.dataset.idx).then(rerender)
+		cp.delete(el.dataset.idx)
+		rerender()
 	    }
 	})
 
@@ -76,12 +78,14 @@ let main = function() {
 
     document.querySelector('#cp__separator_add').onclick = () => {
 	save()
-	cp.add({ separator: 1 }).then(rerender)
+	cp.add({ separator: 1 })
+	rerender()
     }
 
     document.querySelector('#cp__provider_add').onclick = () => {
 	save()
-	cp.add({ name: '', tmpl: '' }).then(rerender)
+	cp.add({ name: '', tmpl: '' })
+	rerender()
     }
 
     let menu_upd = () => {
@@ -95,13 +99,10 @@ let main = function() {
 	    .then(cp.reset.bind(cp)).then(rerender).then(menu_upd)
     }
 
-    /* globals chrome */
     document.querySelector('form').onsubmit = evt => {
 	evt.preventDefault()
-	let data = save()
-	cache_providers.storage.set({cache_providers: data}, () => {
-	    menu_upd()
-	})
+	save()
+	cp.save().then(menu_upd)
     }
 }
 

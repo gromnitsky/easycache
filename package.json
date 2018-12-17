@@ -6,7 +6,9 @@
     "author": "Alexander Gromnitsky",
     "license": "MIT",
     "dependencies": {
+        "chai": "~4.2.0",
         "dialog-polyfill": "~0.4.10",
+        "mocha": "~5.2.0",
         "plain-dialogs": "~0.1.0",
         "table-dragger": "~1.0.2"
     }

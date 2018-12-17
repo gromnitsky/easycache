@@ -1,51 +1,69 @@
-export let storage = chrome.storage[/@temporary/.test(chrome.runtime.id) ? 'local' : 'sync']
+let guess_storage_engine = function() {
+    return new Promise( (resolve, _) => {
+	chrome.management.getSelf( info => {
+	    resolve(chrome.storage[info.installType === 'development' ? 'local' : 'sync'])
+	})
+    })
+}
 
 export class CacheProviders {
-    get() {
-	if (this._list) return Promise.resolve(this._list)
+    constructor(storage) {
+	this.storage = storage || guess_storage_engine()
+	this.skey = 'cache_providers'
+    }
+
+    async load() {
+	let storage = await this.storage
 	return new Promise( (resolve, reject) => {
-	    if (chrome.runtime.lastError) {
-		reject(chrome.runtime.lastError)
-		return
-	    }
-	    storage.get(null, saved => {
-		this._list = saved.cache_providers ? saved.cache_providers : Object.assign([], CacheProviders.def)
-		resolve(this._list)
-	    })
-	})
-    }
-
-    async almost_empty() {
-	return (await this.get()).filter(val => val.name).length === 1
-    }
-
-    async add(obj) { return (await this.get()).push(obj) }
-
-    async findIndex(name) {
-	return (await this.get()).findIndex( val => val.name && val.name === name)
-    }
-
-    async url(name, siteurl = 'https://www.yahoo.com/') {
-	let p = (await this.get())[await this.findIndex(name)]
-	let url = p.encode ? encodeURIComponent(siteurl) : siteurl
-	if (p.tmpl) return p.tmpl.replace(/%s/, url)
-	return CacheProviders.callbacks[p.cb](url)
-    }
-
-    async is_sep(idx) { return (await this.get())[idx].separator }
-
-    async delete(idx) { (await this.get()).splice(idx, 1) }
-
-    reset() {
-	return new Promise( (resolve, reject) => {
-	    storage.remove('cache_providers', () => {
-		this._list = null
+	    storage.get(null, data => {
+		if (chrome.runtime.lastError) {
+		    reject(chrome.runtime.lastError)
+		    return
+		}
+		this.list = this.list || data[this.skey]
+		    || Object.assign([], CacheProviders.def) // a shallow copy
 		resolve(true)
 	    })
 	})
     }
 
-    update(data) { this._list = data }
+    async save() {
+	let storage = await this.storage
+	return new Promise( (resolve, reject) => {
+	    storage.set({[this.skey]: this.list}, () => {
+		chrome.runtime.lastError ? reject(chrome.runtime.lastError) : resolve(true)
+	    })
+	})
+    }
+
+    async reset() {
+	let storage = await this.storage
+	return new Promise( (resolve, reject) => {
+	    storage.remove(this.skey, () => {
+		if (chrome.runtime.lastError) {
+		    reject(chrome.runtime.lastError)
+		    return
+		}
+		this.list = null
+		resolve(true)
+	    })
+	}).then( () => this.load())
+    }
+
+    get() { return this.list }
+    almost_empty() { return this.list.filter(val => val.name).length === 1 }
+    add(obj) { return this.list.push(obj) }
+    findIndex(name) { return this.list.findIndex( val => val.name && val.name === name) }
+    is_sep(idx) { return this.list[idx].separator }
+    delete(idx) { this.list.splice(idx, 1) }
+    update(data) { this.list = data }
+
+    async url(name, siteurl = 'https://www.yahoo.com/') {
+	let p = this.list[this.findIndex(name)]
+	let url = p.encode ? encodeURIComponent(siteurl) : siteurl
+	if (p.tmpl) return p.tmpl.replace(/%s/, url) // FIXME
+	return CacheProviders.callbacks[p.cb](url)
+    }
 }
 
 CacheProviders.callbacks = {
@@ -95,7 +113,7 @@ CacheProviders.def = [
     }
 ]
 
-export let menu = async function(cp) {
+export let menu = function(cp) {
     console.info('create menu')
     let ctx = ["link", "image", "selection"]
     chrome.contextMenus.create({
@@ -111,7 +129,7 @@ export let menu = async function(cp) {
 	    id: String(idx)
 	}, opts))
     };
-    (await cp.get()).forEach( (val, idx) => {
+    cp.get().forEach( (val, idx) => {
 	if (val.separator) {
 	    menu_child(idx, { type: "separator" })
 	} else {

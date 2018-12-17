@@ -5,13 +5,13 @@ let spinner = function() {
     node.style.display = /^(none)?$/.test(node.style.display) ? 'flex' : 'none'
 }
 
-let render = async function(css_query, cp, siteurl) {
+let render = function(css_query, cp, siteurl) {
     let li = function(item) {
 	if (item.separator) return '<li><hr></li>'
 	return `<li><a target='_blank' href="#">${cache_providers.escape_input(item.name)}</a></li>`
     }
     let doc = document.querySelector(css_query)
-    doc.innerHTML = (await cp.get()).map(li).join("\n")
+    doc.innerHTML = cp.get().map(li).join("\n")
 
     doc.querySelectorAll('a').forEach( link => {
 	link.onclick = (evt) => {
@@ -34,8 +34,9 @@ let render = async function(css_query, cp, siteurl) {
 
 let main = function main() {
     // get current tab url
-    chrome.tabs.query({currentWindow: true, active: true}, tabs => {
+    chrome.tabs.query({currentWindow: true, active: true}, async tabs => {
 	let cp = new cache_providers.CacheProviders()
+	await cp.load()
 	render('ul', cp, tabs[0].url)
     })
 }

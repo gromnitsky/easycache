@@ -1,0 +1,18 @@
+<!doctype html>
+<link rel="stylesheet" href="../node_modules/mocha/mocha.css">
+
+<script src="../node_modules/chai/chai.js"></script>
+<script src="../node_modules/mocha/mocha.js"></script>
+
+<div id="mocha"></div>
+
+<script type="module">
+  window.assert = chai.assert
+  mocha.setup('tdd')
+</script>
+
+<script type="module" src="test_storage.js"></script>
+
+<script type="module">
+  mocha.run()
+</script>
