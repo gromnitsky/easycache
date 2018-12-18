@@ -10,7 +10,9 @@
 	"contextMenus",
 	"activeTab",
 	"storage",
-	"https://www.bing.com/*"
+	"https://www.bing.com/*",
+	"https://www.sogou.com/*",
+        "https://search.yahoo.co.jp/*"
     ],
     "background": {
 	"persistent": false,
