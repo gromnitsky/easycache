@@ -1,0 +1,27 @@
+#warning_0af4cd01-9da2-4a0b-9daf-b1a0f67040d1 {
+  display: none; /* flex */
+  justify-content: center;
+  align-items: center;
+
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+#warning_0af4cd01-9da2-4a0b-9daf-b1a0f67040d1--spinner {
+  border: 0.5em solid blue;
+  border-radius: 50%;
+  border-top: 0.5em solid gold;
+  width: 32px;
+  height: 32px;
+  animation: warning_0af4cd01-9da2-4a0b-9daf-b1a0f67040d1--spin 1s linear infinite;
+}
+
+@keyframes warning_0af4cd01-9da2-4a0b-9daf-b1a0f67040d1--spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

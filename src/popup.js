@@ -1,7 +1,7 @@
 import * as cache_providers from './cacheproviders.js'
 
 let spinner = function() {
-    let node = document.querySelector('#warning')
+    let node = document.querySelector('#warning_0af4cd01-9da2-4a0b-9daf-b1a0f67040d1')
     node.style.display = /^(none)?$/.test(node.style.display) ? 'flex' : 'none'
 }
 

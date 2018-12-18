@@ -25,39 +25,15 @@
     height: 1px;
     background-color: lightgray;
   }
-  #warning {
-    display: none; /* flex */
-    justify-content: center;
-    align-items: center;
-
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.1);
-  }
-  #warning--spinner {
-    border: 0.5em solid blue;
-    border-radius: 50%;
-    border-top: 0.5em solid gold;
-    width: 32px;
-    height: 32px;
-    animation: warning--spin 1s linear infinite;
-  }
-  @keyframes warning--spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
 </style>
+<link rel="stylesheet" href="spinner.css">
 
 <ul>
   <!-- render -->
 </ul>
 
-<div id="warning">
-  <div id="warning--spinner"></div>
+<div id="warning_0af4cd01-9da2-4a0b-9daf-b1a0f67040d1">
+  <div id="warning_0af4cd01-9da2-4a0b-9daf-b1a0f67040d1--spinner"></div>
 </div>
 
 <script type="module" src="popup.js"></script>

@@ -8,37 +8,40 @@ let url = function(info) {
     }
 }
 
-let alert = function(tab, msg, retry) {
-    chrome.tabs.sendMessage(tab.id, msg, res => {
+let msg_send = function(tab, type, value, retry) {
+    chrome.tabs.sendMessage(tab.id, {type, value}, res => {
 	if (!res && !retry) {	// no script was injected yet
 	    inject_content_script( () => {
 		console.log('content script injected', tab.url)
-		alert(tab, msg, true) // retry only once
+		msg_send(tab, type, value, true) // retry only once
 	    })
 	    return
 	}
-	// do nothing: the injected script should display an alert() dialog
+	// do nothing: the injected script should do its job & respond w/ 'true'
     })
 }
 
 let inject_content_script = function(cb) {
-    chrome.tabs.executeScript({
-	file: 'content_script.js'
-    }, () => cb())
+    chrome.tabs.executeScript({ file: 'content_script.js'}, () => {
+	chrome.tabs.insertCSS({ file: 'spinner.css' }, () => cb())
+    })
 }
 
 let click = function(cp, info, tab) {
     let link = url(info); if (!link) {
-	alert(tab, "Failed to extract the URL")
+	msg_send(tab, 'alert', "Failed to extract the URL")
 	return
     }
 
+    msg_send(tab, 'spinner')
     let provider = cp.get()[Number(info.menuItemId)]
     cp.url(provider.name, link).then( url => {
+	msg_send(tab, 'spinner')
 	console.log(url)
 	chrome.tabs.create({url})
     }).catch( e => {
-	alert(tab, `Failed to talk to ${provider.name}`)
+	msg_send(tab, 'alert', `Failed to talk to ${provider.name}`)
+	msg_send(tab, 'spinner')
 	throw e
     })
 }
