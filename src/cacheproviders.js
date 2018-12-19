@@ -69,8 +69,16 @@ export class CacheProviders {
 let dom = async function(tmpl, query, encode = true) {
     if (encode) query = encodeURIComponent(query)
     let url = tmpl.replace(/%s/, query) // FIXME
-    let html = await fetch(url).then( r => r.text())
+    let html = await efetch(url).then( r => r.text())
     return new DOMParser().parseFromString(html, "text/html")
+}
+
+let efetch = function(url, opt) {
+    let fetcherr = r => {
+	if (!r.ok) throw new Error(r.statusText)
+	return r
+    }
+    return fetch(url, opt).then(fetcherr)
 }
 
 CacheProviders.callbacks = {
