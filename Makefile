@@ -54,5 +54,5 @@ $(pkg.key):
 
 # sf
 
-upload: $(crx)
+upload: $(pkg.crx)
 	scp $< gromnitsky@web.sourceforge.net:/home/user-web/gromnitsky/htdocs/js/chrome/
