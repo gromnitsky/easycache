@@ -99,6 +99,10 @@ let main = async function() {
 	    .then(cp.reset.bind(cp)).then(rerender).then(menu_upd)
     }
 
+    document.querySelector('#cp__merge').onclick = () => {
+	cp.merge() ? rerender() : plainDialogs.alert('Nothing merged')
+    }
+
     document.querySelector('form').onsubmit = evt => {
 	evt.preventDefault()
 	save()

@@ -13,6 +13,8 @@ let rejects = async function(fn) { // chai doesn't have assert.rejects()
     assert(failed, `${fn.name} wasn't rejected`)
 }
 
+let providers = cache_providers.CacheProviders.def
+
 suite('CacheProviders', function() {
     setup(function() {
 	this.storage = new Storage()
@@ -21,6 +23,37 @@ suite('CacheProviders', function() {
 	this.separator_idx = 6
 	this.total = 12
 	chrome.runtime.lastError = null
+	cache_providers.CacheProviders.def = [...providers]
+    })
+
+    test('merge w/ new providers', async function() {
+	await this.cp.load()
+	this.cp.delete(0)
+	await this.cp.save()
+
+	let p = cache_providers.CacheProviders.def
+	p.push({name: 'new1', id: 'new1-123'})
+	p.push({name: 'new2', id: 'new2-456'})
+
+	await this.cp.load()
+	assert.equal(this.cp.findIndex('Google'), -1)
+	assert.equal(this.cp.findIndex('new1'), -1)
+	assert.equal(this.cp.findIndex('new2'), -1)
+	let before = this.cp.get().length
+
+	this.cp.merge()
+
+	assert.equal(this.cp.get().length, before + 3 + 1)
+	assert(this.cp.findIndex('Google') !== -1)
+	assert(this.cp.findIndex('new1') !== -1)
+	assert(this.cp.findIndex('new2') !== -1)
+    })
+
+    test('merge w/ nothing new', async function() {
+	await this.cp.load()
+	let before = this.cp.get().length
+	this.cp.merge()
+	assert.equal(this.cp.get().length, before)
     })
 
     test('get', async function() {

@@ -58,6 +58,19 @@ export class CacheProviders {
     delete(idx) { this.list.splice(idx, 1) }
     update(data) { this.list = data }
 
+    merge() { // add to `this.list` the missing staff from `CacheProviders.def`
+	let missing = CacheProviders.def.filter( val => {
+	    return !val.separator && this.findIndex(val.name) === -1
+	})
+	if (missing.length) {
+	    if (this.list[this.list.length-1].separator)
+		this.list = [...this.list, ...missing]
+	    else
+		this.list = [...this.list, { separator: 1 }, ...missing]
+	}
+	return missing.length
+    }
+
     async url(name, siteurl = 'https://www.yahoo.com/') {
 	let p = this.list[this.findIndex(name)]
 	let url = p.encode ? encodeURIComponent(siteurl) : siteurl
