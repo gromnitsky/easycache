@@ -133,3 +133,15 @@ suite('CacheProviders', function() {
 		     'https://archive.is/http%3A%2F%2Fexample.com%2F%3Fq%3Dfoo')
     })
 })
+
+let sprintf = cache_providers.sprintf
+
+suite('misc', function() {
+    test('sprintf', function() {
+	assert.equal(sprintf(), '')
+	assert.equal(sprintf(''), '')
+	assert.equal(sprintf('omg'), 'omg')
+	assert.equal(sprintf('omg%s', 'lol'), 'omglol')
+	assert.equal(sprintf('%%s%s%s %s4', 1,2), '%s12 4')
+    })
+})

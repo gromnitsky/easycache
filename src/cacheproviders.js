@@ -74,14 +74,14 @@ export class CacheProviders {
     async url(name, siteurl = 'https://www.yahoo.com/') {
 	let p = this.list[this.findIndex(name)]
 	let url = p.encode ? encodeURIComponent(siteurl) : siteurl
-	if (p.tmpl) return p.tmpl.replace(/%s/, url) // FIXME
+	if (p.tmpl) return sprintf(p.tmpl, url)
 	return CacheProviders.callbacks[p.cb](url)
     }
 }
 
 let dom = async function(tmpl, query, encode = true) {
     if (encode) query = encodeURIComponent(query)
-    let url = tmpl.replace(/%s/, query) // FIXME
+    let url = sprintf(tmpl, query)
     let html = await efetch(url).then( r => r.text())
     return new DOMParser().parseFromString(html, "text/html")
 }
@@ -209,4 +209,17 @@ export let escape_input = function(str) {
 	"'": '&#39;',
 	'`': '&#x60;',
     }[char]))
+}
+
+let is_str = function(s) {
+    return Object.prototype.toString.call(s) === "[object String]"
+}
+
+export let sprintf = function(format, ...args) { // understands only %s
+    if (!is_str(format)) return ''
+    return format.replace(/%(.)/g, (_, p1) => {
+	if (p1 === '%') return p1
+	let arg = args.shift()
+	return arg == null ? '' : arg.toString()
+    })
 }
