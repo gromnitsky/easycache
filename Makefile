@@ -1,13 +1,10 @@
 out := _out/$(shell git rev-parse --abbrev-ref HEAD)
 ext := $(out)/ext
-pkg.name := $(shell json -d- -a name version < src/manifest.json)
-pkg.crx := $(out)/$(pkg.name).crx
-
-mkdir = @mkdir -p $(dir $@)
-copy = cp $< $@
+pkg := $(shell json -d- -a name version < src/manifest.json)
+crx := $(out)/$(pkg).crx
+zip := $(out)/$(pkg).zip
 
 all:
-crx: $(pkg.crx)
 
 
 
@@ -41,18 +38,22 @@ all: $(compile.all)
 
 
 
-$(out)/$(pkg.name).zip: $(compile.all)
-	$(mkdir)
+zip: $(zip)
+$(zip): $(compile.all)
 	cd $(ext) && zip -qr $(CURDIR)/$@ *
 
+crx: $(crx)
 pkg.key := $(out)/private.pem
-%.crx: %.zip $(pkg.key)
-	./zip2crx $^
+$(crx): $(pkg.key) $(compile.all)
+	google-chrome --pack-extension=$(ext) --pack-extension-key=$<
+	mv $(out)/ext.crx $@
 
 $(pkg.key):
-	openssl genrsa 2048 > $@
+	$(mkdir)
+	openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 -out $@
 
-# sf
+mkdir = @mkdir -p $(dir $@)
+copy = cp $< $@
 
-upload: $(pkg.crx)
+upload: $(crx)
 	scp $< gromnitsky@web.sourceforge.net:/home/user-web/gromnitsky/htdocs/js/chrome/
