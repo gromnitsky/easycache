@@ -144,9 +144,9 @@ CacheProviders.def = [
 	cb: 'sogou'
     },
     {
-	name: "Naver 네이버",
-	tmpl: 'http://125.209.214.38/search2.naver?where=web_html&u=%s',
-	encode: 1
+        name: "Naver 네이버",
+        tmpl: 'http://210.89.172.69/search2.naver?where=web_html&u=%s',
+        encode: 1
     },
     {
 	name: "Yahoo! Japan ヤフー株式会社",
@@ -162,15 +162,15 @@ CacheProviders.def = [
 	tmpl: 'https://web.archive.org/web/*/%s',
     },
     {
-	name: 'archive.is',
-	tmpl: 'https://archive.is/%s',
-	encode: 1
+        name: 'archive.today',
+        tmpl: 'https://archive.today/%s',
+        encode: 1
     },
     { separator: 1 },
     {
-	name: 'archive.is: capture a webpage',
-	tmpl: 'https://archive.today/?run=1&url=%s',
-	encode: 1
+        name: 'archive.today: capture a webpage',
+        tmpl: 'https://archive.today/?run=1&url=%s',
+        encode: 1
     }
 ]
 
