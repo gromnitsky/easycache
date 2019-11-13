@@ -44,9 +44,8 @@ $(zip): $(compile.all)
 
 crx: $(crx)
 pkg.key := $(out)/private.pem
-$(crx): $(pkg.key) $(compile.all)
-	google-chrome --pack-extension=$(ext) --pack-extension-key=$<
-	mv $(out)/ext.crx $@
+%.crx: %.zip $(pkg.key)
+	crx3-new $(pkg.key) < $< > $@
 
 $(pkg.key):
 	$(mkdir)
@@ -57,3 +56,5 @@ copy = cp $< $@
 
 upload: $(crx)
 	scp $< gromnitsky@web.sourceforge.net:/home/user-web/gromnitsky/htdocs/js/chrome/
+
+.DELETE_ON_ERROR:

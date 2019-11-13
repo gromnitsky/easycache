@@ -25,7 +25,7 @@ all the info we need for reconstructing a proper url.
 
 ## Compilation
 
-	$ npm i -g json
+	$ npm i -g json crx3-utils
 	$ make crx
 
 The resulting .crx should appear in `_out` dir.
