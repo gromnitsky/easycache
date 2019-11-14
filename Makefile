@@ -38,6 +38,7 @@ all: $(compile.all)
 
 zip: $(zip)
 $(zip): $(compile.all)
+	-rm $@
 	cd $(ext) && zip -qr $(CURDIR)/$@ *
 
 crx: $(crx)
