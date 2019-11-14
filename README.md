@@ -1,14 +1,13 @@
 # easycache
 
-(Download the .crx file [here](http://gromnitsky.users.sourceforge.net/js/chrome/).)
+* [crx](http://gromnitsky.users.sourceforge.net/js/chrome/)
+* [chrome web store](https://chrome.google.com/webstore/detail/easycache/kcidaidcpfbkemhohngajephodacajbf)
+* [firefox addons](https://addons.mozilla.org/en-US/firefox/addon/easycache/)
 
 Open any link or the active tab in services like Google Cache, Bing,
-Wayback Machine or archive.is. Add you own providers.
+Wayback Machine or archive.today. Add you own providers.
 
-Minimum supported versions:
-
-* Chrome 71
-* Firefox 60.4.0
+Minimum supported Firefox version: 68.2.0esr.
 
 ![popup](https://ultraimg.com/images/2017/11/25/ncZ7.png)
 
@@ -25,7 +24,7 @@ all the info we need for reconstructing a proper url.
 
 ## Compilation
 
-	$ npm i -g json crx3-utils
+	$ npm i -g json crx3-utils adieu
 	$ make crx
 
 The resulting .crx should appear in `_out` dir.

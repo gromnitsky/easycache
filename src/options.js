@@ -42,7 +42,7 @@ let main = async function() {
 	    }
 	})
 
-	dragger = tableDragger(document.querySelector('table'), {
+	dragger = tableDragger.default(document.querySelector('table'), {
 	    mode: 'row',
 	    dragHandler: '.cp__item__move',
 	    onlyBody: true,

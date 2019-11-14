@@ -15,15 +15,13 @@ $(out)/.node_modules.mk: package.json
 	npm i
 	@touch $@ && echo Restarting Make
 
-vendor.src := table-dragger/dist/table-dragger.min.js \
-	dialog-polyfill/dialog-polyfill.css \
-	dialog-polyfill/dialog-polyfill.js \
-	plain-dialogs/dist/plain-dialogs.js
-vendor.dest := $(addprefix $(ext)/vendor/, $(vendor.src))
+vendor.src := $(shell adieu -pe '$$("link,script").map((_,e) => $$(e).attr("href") || $$(e).attr("src")).get().filter(v => /node_modules/.test(v)).join`\n`' src/options.html)
+vendor.dest := $(addprefix $(ext)/, $(vendor.src))
 
-$(ext)/vendor/%: node_modules/%
+$(ext)/node_modules/%: node_modules/%
 	$(mkdir)
 	$(copy)
+	@[ ! -r "$<".map ] || cp "$<".map "$@".map
 
 $(vendor.dest): $(out)/.node_modules.mk
 
