@@ -96,31 +96,12 @@ let efetch = function(url, opt) {
 
 CacheProviders.callbacks = {
     // retrieve the 1st cached result of the search;
-    // works as of Sat Nov 25 07:00:14 EET 2017
+    // works as of Tue 10 Sep 20:40:22 EEST 2024
     bing: async function(query) {
-	let doc = await dom('https://www.bing.com/search?q=%s', query)
-	let div = doc.querySelector('div.b_caption .b_attribution')
-	let p = div.getAttribute('u').split('|')
-	return `http://cc.bingj.com/cache.aspx?q=${query}&d=${p[2]}&w=${p[3]}`
-    },
-
-    // retrieve the 1st cached result of the search;
-    // works as of Tue Dec 18 00:02:40 EET 2018
-    sogou: async function(query) {
-	let doc = await dom('https://www.sogou.com/web?query=%s', query)
-	return doc.querySelector('a[id^="sogou_snapshot_"]').href
-    },
-
-    qihoo_360: async function(query) { // broken: the res url requires a referer
-	let doc = await dom('https://www.so.com/s?q=%s', query)
-	return doc.querySelector('a[class="m"]').href
-    },
-
-    // retrieve the 1st cached result of the search;
-    // works as of Tue Dec 18 00:12:38 EET 2018
-    yahoo_japan: async function(query) {
-	let doc = await dom('https://search.yahoo.co.jp/search?p=%s', query)
-	return doc.querySelector('div[class="bd"] a').href
+        let doc = await dom('https://www.bing.com/search?q=%s', query)
+        let div = doc.querySelector('div.b_attribution')
+        let p = div.getAttribute('u').split('|')
+        return `http://cc.bingj.com/cache.aspx?q=${query}&d=${p[2]}&w=${p[3]}`
     },
 }
 
@@ -139,37 +120,20 @@ CacheProviders.def = [
 	name: "Bing",
 	cb: 'bing'
     },
-    {
-	name: "Sogou 搜狗",
-	cb: 'sogou'
-    },
-    {
-        name: "Naver 네이버",
-        tmpl: 'http://210.89.172.69/search2.naver?where=web_html&u=%s',
-        encode: 1
-    },
-    {
-	name: "Yahoo! Japan ヤフー株式会社",
-	cb: 'yahoo_japan'
-    },
     { separator: 1 },
-    {
-	name: "Time Travel",
-	tmpl: 'http://timetravel.mementoweb.org/list/0/%s'
-    },
     {
 	name: "Wayback Machine",
 	tmpl: 'https://web.archive.org/web/*/%s',
     },
     {
-        name: 'archive.today',
-        tmpl: 'https://archive.today/%s',
+        name: 'archive.is',
+        tmpl: 'https://archive.is/%s',
         encode: 1
     },
     { separator: 1 },
     {
-        name: 'archive.today: capture a webpage',
-        tmpl: 'https://archive.today/?run=1&url=%s',
+        name: 'archive.is: capture a webpage',
+        tmpl: 'https://archive.is/?run=1&url=%s',
         encode: 1
     }
 ]

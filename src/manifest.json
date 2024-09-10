@@ -13,9 +13,7 @@
 	"storage"
     ],
     "host_permissions": [
-	"https://www.bing.com/*",
-	"https://www.sogou.com/*",
-        "https://search.yahoo.co.jp/*"
+	"https://www.bing.com/*"
     ],
     "background": {
 	"type": "module",
