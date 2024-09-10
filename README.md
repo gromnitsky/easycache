@@ -3,9 +3,9 @@
 * [Chrome Web Store](https://chromewebstore.google.com/detail/easycache/kcidaidcpfbkemhohngajephodacajbf)
 * [.crx file](http://gromnitsky.users.sourceforge.net/js/chrome/)
 
-A browser extension (manifest v3) to open any link or the active tab
-in services like Google Cache, Bing, Wayback Machine or
-archive.is. You can add another providers.
+A browser extension (manifest v3) that serves as an interface to
+various web caches or archivers (Google, Bing, Wayback Machine,
+archive.is). You can add another providers.
 
 ## Implementation notes from 2017
 
