@@ -25,30 +25,18 @@ function inject_content_script(tab, cb) {
     chrome.scripting.executeScript({
         target: {tabId: tab.id},
         files: ['content_script.js']
-    }, () => {
-        chrome.scripting.insertCSS({
-            target: {tabId: tab.id},
-            files: ['spinner.css']
-        }, () => cb())
-    })
+    }, () => cb())
 }
 
-let click = function(cp, info, tab) {
+function click(cp, info, tab) {
     let link = url(info); if (!link) {
-	msg_send(tab, 'alert', "Failed to extract the URL")
-	return
+        return msg_send(tab, 'alert', "Failed to extract the URL")
     }
 
-    msg_send(tab, 'spinner')
     let provider = cp.get()[Number(info.menuItemId)]
     cp.url(provider.name, link).then( url => {
-	msg_send(tab, 'spinner')
-	console.log(url)
-	chrome.tabs.create({url})
-    }).catch( e => {
-	msg_send(tab, 'alert', `Failed to talk to ${provider.name}`)
-	msg_send(tab, 'spinner')
-	throw e
+        console.log(url)
+        chrome.tabs.create({url})
     })
 }
 
@@ -62,5 +50,5 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 chrome.runtime.onInstalled.addListener(async () => {
     let cp = new cache_providers.CacheProviders()
     await cp.load()
-    cache_providers.menu(cp)
+    cache_providers.menu(cp, true)
 })

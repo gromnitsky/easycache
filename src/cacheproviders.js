@@ -138,7 +138,7 @@ CacheProviders.def = [
     }
 ]
 
-export let menu = function(cp) {
+export let menu = function(cp, skip_non_template_based) {
     console.info('create menu')
     let ctx = ["link", "image", "selection"]
     chrome.contextMenus.create({
@@ -154,13 +154,15 @@ export let menu = function(cp) {
 	    id: String(idx)
 	}, opts))
     };
-    cp.get().forEach( (val, idx) => {
-	if (val.separator) {
-	    menu_child(idx, { type: "separator" })
-	} else {
-	    menu_child(idx, { title: val.name })
-	}
-    })
+
+    for (let [idx, val] of cp.get().entries()) {
+        if (skip_non_template_based && val.cb) continue
+        if (val.separator) {
+            menu_child(idx, { type: "separator" })
+        } else {
+            menu_child(idx, { title: val.name })
+        }
+    }
 }
 
 export let escape_input = function(str) {
