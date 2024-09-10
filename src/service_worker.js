@@ -3,7 +3,7 @@ import * as cache_providers from './cacheproviders.js'
 let url = function(info) {
     try {
 	return new URL(info.selectionText || info.linkUrl || info.srcUrl).href
-    } catch (e) {
+    } catch (_) {
 	return null
     }
 }
@@ -11,7 +11,7 @@ let url = function(info) {
 let msg_send = function(tab, type, value, retry) {
     chrome.tabs.sendMessage(tab.id, {type, value}, res => {
 	if (!res && !retry) {	// no script was injected yet
-	    inject_content_script( () => {
+	    inject_content_script(tab, () => {
 		console.log('content script injected', tab.url)
 		msg_send(tab, type, value, true) // retry only once
 	    })
@@ -21,9 +21,15 @@ let msg_send = function(tab, type, value, retry) {
     })
 }
 
-let inject_content_script = function(cb) {
-    chrome.tabs.executeScript({ file: 'content_script.js'}, () => {
-	chrome.tabs.insertCSS({ file: 'spinner.css' }, () => cb())
+function inject_content_script(tab, cb) {
+    chrome.scripting.executeScript({
+        target: {tabId: tab.id},
+        files: ['content_script.js']
+    }, () => {
+        chrome.scripting.insertCSS({
+            target: {tabId: tab.id},
+            files: ['spinner.css']
+        }, () => cb())
     })
 }
 

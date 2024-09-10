@@ -1,24 +1,27 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "easycache",
-    "description": "An interface to various web caches/archivers (Google, Bing, Wayback Machine, archive.is). You can add own providers.",
-    "version": "2.1.2",
+    "description": "An interface to various web caches or archivers (Google, Bing, Wayback Machine, archive.is). You can add another providers.",
+    "version": "3.0.0",
     "options_ui": {
 	"page": "options.html"
     },
     "permissions": [
 	"contextMenus",
 	"activeTab",
-	"storage",
+        "scripting",
+	"storage"
+    ],
+    "host_permissions": [
 	"https://www.bing.com/*",
 	"https://www.sogou.com/*",
         "https://search.yahoo.co.jp/*"
     ],
     "background": {
-	"persistent": false,
-	"page": "event_page.html"
+	"type": "module",
+	"service_worker": "service_worker.js"
     },
-    "browser_action": {
+    "action": {
         "default_popup": "popup.html",
 	"default_icon": "icon128.png"
     },
