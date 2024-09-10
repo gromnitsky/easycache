@@ -1,21 +1,13 @@
 # easycache
 
-* [crx](http://gromnitsky.users.sourceforge.net/js/chrome/)
-* [chrome web store](https://chrome.google.com/webstore/detail/easycache/kcidaidcpfbkemhohngajephodacajbf)
-* [firefox addons](https://addons.mozilla.org/en-US/firefox/addon/easycache/)
+* [Chrome Web Store](https://chromewebstore.google.com/detail/easycache/kcidaidcpfbkemhohngajephodacajbf)
+* [.crx file](http://gromnitsky.users.sourceforge.net/js/chrome/)
 
-Open any link or the active tab in services like Google Cache, Bing,
-Wayback Machine or archive.today. Add you own providers.
+A browser extension (manifest v3) to open any link or the active tab
+in services like Google Cache, Bing, Wayback Machine or
+archive.is. You can add another providers.
 
-Minimum supported Firefox version: 68.2.0esr.
-
-![popup](https://ultraimg.com/images/2017/11/25/ncZ7.png)
-
-![options](https://ultraimg.com/images/2017/11/25/ncZU.png)
-
-![context menu](https://ultraimg.com/images/2017/11/25/ncZ8.png)
-
-## Bing cache
+## Implementation notes from 2017
 
 Bing support is a bit hacky. Bing has Web Search API but it doesn't
 include refs to cached pages in its responses. Thus we just scrape a
