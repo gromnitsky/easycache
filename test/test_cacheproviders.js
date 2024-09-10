@@ -21,7 +21,7 @@ suite('CacheProviders', function() {
 	this.cp = new cache_providers.CacheProviders(this.storage)
 	this.bing_idx = 2
 	this.separator_idx = 6
-	this.total = 12
+	this.total = 8
 	chrome.runtime.lastError = null
 	cache_providers.CacheProviders.def = [...providers]
     })
@@ -128,9 +128,9 @@ suite('CacheProviders', function() {
 	assert.equal(await this.cp.url('Wayback Machine',
 				       'http://example.com/?q=foo'),
 		     'https://web.archive.org/web/*/http://example.com/?q=foo')
-	assert.equal(await this.cp.url('archive.today',
+	assert.equal(await this.cp.url('archive.is',
 				       'http://example.com/?q=foo'),
-		     'https://archive.today/http%3A%2F%2Fexample.com%2F%3Fq%3Dfoo')
+		     'https://archive.is/http%3A%2F%2Fexample.com%2F%3Fq%3Dfoo')
     })
 })
 

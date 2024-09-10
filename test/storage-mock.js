@@ -23,5 +23,4 @@ export default class Storage {
     }
 }
 
-// ff
-if (typeof chrome === 'undefined') window.chrome = { runtime: {} }
+window.chrome = { runtime: {} }
