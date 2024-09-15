@@ -5,39 +5,54 @@ let spinner = function() {
     node.style.display = /^(none)?$/.test(node.style.display) ? 'flex' : 'none'
 }
 
-let render = function(css_query, cp, siteurl) {
+function render(node, cp) {
     let li = function(item) {
-	if (item.separator) return '<li><hr></li>'
-	return `<li><a target='_blank' href="#">${cache_providers.escape_input(item.name)}</a></li>`
+        if (item.separator) return '<li><hr></li>'
+        return `<li><a target='_blank' href="#">${cache_providers.escape_input(item.name)}</a></li>`
     }
-    let doc = document.querySelector(css_query)
-    doc.innerHTML = cp.get().map(li).join("\n")
+    node.innerHTML = cp.get().map(li).join("\n")
+}
 
-    doc.querySelectorAll('a').forEach( link => {
-	link.onclick = (evt) => {
-	    evt.preventDefault()
-	    spinner()
+function click(event, cp, tab_url) {
+    if (event.target.tagName !== 'A') return
+    event.preventDefault()
+    spinner()
 
-	    let name = link.innerText
-	    cp.url(name, siteurl).then( url => {
-		spinner()
-		console.log(url)
-		chrome.tabs.create({url}, () => window.close())
-	    }).catch(e => {
-		alert(`Failed to talk to ${name}`)
-		spinner()
-		throw e
-	    })
-	}
+    let provider_name = event.target.innerText
+    cp.url(provider_name, tab_url).then( url => {
+        spinner()
+        chrome.tabs.create({url}, () => window.close())
+    }).catch( e => {
+        alert(`Failed to talk to ${provider_name}. Inspect the popup in devtools.`)
+        spinner()
+        throw e
     })
 }
 
 let main = function main() {
+    let ul = document.querySelector('ul')
+
     // get current tab url
     chrome.tabs.query({currentWindow: true, active: true}, async tabs => {
-	let cp = new cache_providers.CacheProviders()
-	await cp.load()
-	render('ul', cp, tabs[0].url)
+        let cp = new cache_providers.CacheProviders()
+        await cp.load()
+        render(ul, cp)
+        let tab_url = tabs[0].url
+        ul.addEventListener('click', event => {
+            click(event, cp, tab_url)
+        })
+
+        // if the popup was invoked via a context menu, simulate a
+        // click
+        chrome.runtime.sendMessage({'provider_name': true}, res => {
+            if (res) click({ // simulated event
+                preventDefault: () => {},
+                target: {
+                    tagName: 'A',
+                    innerText: res
+                }
+            }, cp, tab_url)
+        })
     })
 }
 

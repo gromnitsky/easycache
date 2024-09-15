@@ -1,54 +1,31 @@
 import * as cache_providers from './cacheproviders.js'
 
-let url = function(info) {
-    try {
-	return new URL(info.selectionText || info.linkUrl || info.srcUrl).href
-    } catch (_) {
-	return null
-    }
-}
+let provider_name
 
-let msg_send = function(tab, type, value, retry) {
-    chrome.tabs.sendMessage(tab.id, {type, value}, res => {
-	if (!res && !retry) {	// no script was injected yet
-	    inject_content_script(tab, () => {
-		console.log('content script injected', tab.url)
-		msg_send(tab, type, value, true) // retry only once
-	    })
-	    return
-	}
-	// do nothing: the injected script should do its job & respond w/ 'true'
-    })
-}
-
-function inject_content_script(tab, cb) {
-    chrome.scripting.executeScript({
-        target: {tabId: tab.id},
-        files: ['content_script.js']
-    }, () => cb())
-}
-
-function click(cp, info, tab) {
-    let link = url(info); if (!link) {
-        return msg_send(tab, 'alert', "Failed to extract the URL")
-    }
-
-    let provider = cp.get()[Number(info.menuItemId)]
-    cp.url(provider.name, link).then( url => {
-        console.log(url)
-        chrome.tabs.create({url})
-    })
-}
-
-chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+async function click(info, _tab) {
     let cp = new cache_providers.CacheProviders()
     await cp.load()
-    click(cp, info, tab)
-})
+    // this is a short-lived variable but it has enough lifespan for
+    // the popup to read its value
+    provider_name = cp.get()[Number(info.menuItemId)].name
+    chrome.action.openPopup()
+}
+
+function messages_from_popup(req, sender, res) {
+    if (req?.provider_name) {
+        res(provider_name)
+        provider_name = null
+    } else {
+        console.error('unknown message from popup:', req)
+    }
+}
+
+chrome.contextMenus.onClicked.addListener(click)
+chrome.runtime.onMessage.addListener(messages_from_popup)
 
 // the callback shouldn't run each time chrome wakes up the extension
 chrome.runtime.onInstalled.addListener(async () => {
     let cp = new cache_providers.CacheProviders()
     await cp.load()
-    cache_providers.menu(cp, true)
+    cache_providers.menu(cp)
 })
