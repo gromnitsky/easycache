@@ -1,20 +1,23 @@
 import * as cache_providers from './cacheproviders.js'
 
-let provider_name
+let provider
 
 async function click(info, _tab) {
     let cp = new cache_providers.CacheProviders()
     await cp.load()
     // this is a short-lived variable but it has enough lifespan for
     // the popup to read its value
-    provider_name = cp.get()[Number(info.menuItemId)].name
+    provider = {
+        name: cp.get()[Number(info.menuItemId)].name,
+        siteurl: info.selectionText || info.linkUrl || info.srcUrl
+    }
     chrome.action.openPopup()
 }
 
 function messages_from_popup(req, sender, res) {
-    if (req?.provider_name) {
-        res(provider_name)
-        provider_name = null
+    if (req?.provider) {
+        res(provider)
+        provider = null
     } else {
         console.error('unknown message from popup:', req)
     }

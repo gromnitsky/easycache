@@ -18,6 +18,14 @@ function click(event, cp, tab_url) {
     event.preventDefault()
     spinner()
 
+    try {
+        new URL(tab_url)
+    } catch (_) {
+        alert('Invalid URL')
+        window.close()
+        return
+    }
+
     let provider_name = event.target.innerText
     cp.url(provider_name, tab_url).then( url => {
         spinner()
@@ -37,21 +45,21 @@ let main = function main() {
         let cp = new cache_providers.CacheProviders()
         await cp.load()
         render(ul, cp)
-        let tab_url = tabs[0].url
         ul.addEventListener('click', event => {
-            click(event, cp, tab_url)
+            click(event, cp, tabs[0].url)
         })
 
         // if the popup was invoked via a context menu, simulate a
         // click
-        chrome.runtime.sendMessage({'provider_name': true}, res => {
-            if (res) click({ // simulated event
+        chrome.runtime.sendMessage({'provider': true}, res => {
+            if (!res) return
+            click({ // simulated event
                 preventDefault: () => {},
                 target: {
                     tagName: 'A',
-                    innerText: res
+                    innerText: res.name
                 }
-            }, cp, tab_url)
+            }, cp, res.siteurl)
         })
     })
 }
