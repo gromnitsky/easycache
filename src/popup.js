@@ -49,20 +49,22 @@ let main = function main() {
         ul.addEventListener('click', event => {
             click(event, cp, tabs[0].url)
         })
-
-        // if the popup was invoked via a context menu, simulate a
-        // click
-        chrome.runtime.sendMessage({'provider': true}, res => {
-            if (!res) return
-            click({ // simulated event
-                preventDefault: () => {},
-                target: {
-                    tagName: 'A',
-                    innerText: res.name
-                }
-            }, cp, res.siteurl)
-        })
     })
 }
 
 document.addEventListener('DOMContentLoaded', main)
+
+async function messages_from_background_script(req) {
+    if (!req) return
+    let cp = new cache_providers.CacheProviders()
+    await cp.load()
+    click({                     // simulated event
+        preventDefault: () => {},
+        target: {
+            tagName: 'A',
+            innerText: req.name
+        }
+    }, cp, req.siteurl)
+}
+
+chrome.runtime.onMessage.addListener(messages_from_background_script)
