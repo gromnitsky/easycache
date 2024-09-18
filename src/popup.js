@@ -1,3 +1,4 @@
+/* globals plainDialogs */
 import * as cache_providers from './cacheproviders.js'
 
 let spinner = function() {
@@ -13,7 +14,7 @@ function render(node, cp) {
     node.innerHTML = cp.get().map(li).join("\n")
 }
 
-function click(event, cp, tab_url) {
+async function click(event, cp, tab_url) {
     if (event.target.tagName !== 'A') return
     event.preventDefault()
     spinner()
@@ -21,7 +22,7 @@ function click(event, cp, tab_url) {
     try {
         new URL(tab_url)
     } catch (_) {
-        alert('Invalid URL')
+        await plainDialogs.alert('Invalid URL')
         window.close()
         return
     }
@@ -30,8 +31,8 @@ function click(event, cp, tab_url) {
     cp.url(provider_name, tab_url).then( url => {
         spinner()
         chrome.tabs.create({url}, () => window.close())
-    }).catch( e => {
-        alert(`Failed to talk to ${provider_name}. Inspect the popup in devtools.`)
+    }).catch( async e => {
+        await plainDialogs.alert(`Failed to talk to ${provider_name}. Inspect the popup in devtools.`)
         spinner()
         throw e
     })
