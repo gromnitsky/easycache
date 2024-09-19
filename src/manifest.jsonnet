@@ -23,7 +23,7 @@ function(browser="chrome") {
   },
   [if browser == "firefox" then "browser_specific_settings"]: {
     "gecko": {
-      "id": "{f21a4601-8d19-4e61-be09-6101beb4519d}",
+      "id": "{6c625cfb-bbdd-4378-bef3-271e77b091df}",
       "strict_min_version": "130.0"
     }
   },
